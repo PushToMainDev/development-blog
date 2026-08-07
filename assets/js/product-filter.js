@@ -1,41 +1,55 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const buttons = [...document.querySelectorAll(".filter-button")];
+  const select = document.getElementById("product-filter");
   const posts = [...document.querySelectorAll(".post-row[data-product]")];
   const empty = document.getElementById("filter-empty");
 
-  if (!buttons.length || !posts.length) return;
+  if (!select || !posts.length) return;
 
   const applyFilter = (filter) => {
     let visibleCount = 0;
 
     posts.forEach((post) => {
-      const show = filter === "all" || post.dataset.product === filter;
+      const show =
+        filter === "all" ||
+        post.dataset.product === filter;
+
       post.hidden = !show;
-      if (show) visibleCount += 1;
+
+      if (show) {
+        visibleCount += 1;
+      }
     });
 
-    buttons.forEach((button) => {
-      const active = button.dataset.filter === filter;
-      button.classList.toggle("is-active", active);
-      button.setAttribute("aria-pressed", active ? "true" : "false");
-    });
-
-    if (empty) empty.hidden = visibleCount !== 0;
+    if (empty) {
+      empty.hidden = visibleCount !== 0;
+    }
 
     const url = new URL(window.location.href);
+
     if (filter === "all") {
       url.searchParams.delete("product");
     } else {
       url.searchParams.set("product", filter);
     }
+
     history.replaceState({}, "", url);
   };
 
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => applyFilter(button.dataset.filter));
+  select.addEventListener("change", () => {
+    applyFilter(select.value);
   });
 
-  const requested = new URLSearchParams(window.location.search).get("product");
-  const valid = buttons.some((button) => button.dataset.filter === requested);
-  applyFilter(valid ? requested : "all");
+  const requested =
+    new URLSearchParams(window.location.search).get("product");
+
+  const validOption =
+    [...select.options].some(
+      (option) => option.value === requested
+    );
+
+  if (requested && validOption) {
+    select.value = requested;
+  }
+
+  applyFilter(select.value);
 });
