@@ -100,33 +100,46 @@ nav a:hover { color: var(--text); }
 
 .product-filter-select {
   margin-top: 12px;
+  width: 100%;
   max-width: 360px;
+  position: relative;
 }
 
 .product-filter-select select {
   width: 100%;
+
   appearance: none;
   -webkit-appearance: none;
 
-  background-color: var(--panel);
-  color: var(--text);
+  background-color: var(--bg);
+  color: var(--accent);
 
   border: 1px solid var(--line);
   border-radius: 10px;
 
-  padding: 12px 44px 12px 14px;
+  padding: 13px 46px 13px 16px;
 
-  font: 700 .85rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: .9rem;
+  font-weight: 700;
 
   cursor: pointer;
 
   background-image:
-    linear-gradient(45deg, transparent 50%, var(--accent) 50%),
-    linear-gradient(135deg, var(--accent) 50%, transparent 50%);
+    linear-gradient(
+      45deg,
+      transparent 50%,
+      var(--accent) 50%
+    ),
+    linear-gradient(
+      135deg,
+      var(--accent) 50%,
+      transparent 50%
+    );
 
   background-position:
-    calc(100% - 18px) calc(50% - 2px),
-    calc(100% - 12px) calc(50% - 2px);
+    calc(100% - 19px) 50%,
+    calc(100% - 13px) 50%;
 
   background-size:
     6px 6px,
@@ -136,7 +149,7 @@ nav a:hover { color: var(--text); }
 
   transition:
     border-color .2s ease,
-    background-color .2s ease;
+    box-shadow .2s ease;
 }
 
 .product-filter-select select:hover {
@@ -144,13 +157,16 @@ nav a:hover { color: var(--text); }
 }
 
 .product-filter-select select:focus {
-  border-color: var(--accent);
   outline: none;
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 3px rgba(103, 232, 249, 0.08);
 }
 
 .product-filter-select select option {
-  background: var(--panel);
-  color: var(--text);
+  background-color: var(--bg);
+  color: var(--accent);
 }
 
 .product-badge {

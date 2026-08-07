@@ -1,55 +1,65 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const select = document.getElementById("product-filter");
-  const posts = [...document.querySelectorAll(".post-row[data-product]")];
-  const empty = document.getElementById("filter-empty");
+  const productFilter = document.getElementById("product-filter");
+  const posts = document.querySelectorAll(".post-row[data-product]");
+  const emptyMessage = document.getElementById("filter-empty");
 
-  if (!select || !posts.length) return;
+  if (!productFilter) return;
 
-  const applyFilter = (filter) => {
-    let visibleCount = 0;
+  function filterPosts() {
+    const selectedProduct = productFilter.value.trim().toLowerCase();
+    let visiblePosts = 0;
 
     posts.forEach((post) => {
-      const show =
-        filter === "all" ||
-        post.dataset.product === filter;
+      const postProduct =
+        (post.dataset.product || "")
+          .trim()
+          .toLowerCase();
 
-      post.hidden = !show;
+      const shouldShow =
+        selectedProduct === "all" ||
+        postProduct === selectedProduct;
 
-      if (show) {
-        visibleCount += 1;
+      if (shouldShow) {
+        post.removeAttribute("hidden");
+        visiblePosts++;
+      } else {
+        post.setAttribute("hidden", "");
       }
     });
 
-    if (empty) {
-      empty.hidden = visibleCount !== 0;
+    if (emptyMessage) {
+      emptyMessage.hidden = visiblePosts > 0;
     }
 
     const url = new URL(window.location.href);
 
-    if (filter === "all") {
+    if (selectedProduct === "all") {
       url.searchParams.delete("product");
     } else {
-      url.searchParams.set("product", filter);
+      url.searchParams.set("product", selectedProduct);
     }
 
-    history.replaceState({}, "", url);
-  };
-
-  select.addEventListener("change", () => {
-    applyFilter(select.value);
-  });
-
-  const requested =
-    new URLSearchParams(window.location.search).get("product");
-
-  const validOption =
-    [...select.options].some(
-      (option) => option.value === requested
-    );
-
-  if (requested && validOption) {
-    select.value = requested;
+    window.history.replaceState({}, "", url);
   }
 
-  applyFilter(select.value);
+  productFilter.addEventListener("change", filterPosts);
+
+  const requestedProduct =
+    new URLSearchParams(window.location.search)
+      .get("product");
+
+  if (requestedProduct) {
+    const matchingOption =
+      [...productFilter.options].find(
+        (option) =>
+          option.value.toLowerCase() ===
+          requestedProduct.toLowerCase()
+      );
+
+    if (matchingOption) {
+      productFilter.value = matchingOption.value;
+    }
+  }
+
+  filterPosts();
 });
