@@ -37,3 +37,5 @@ It's the kids' sports team or church youth group that can build a fundraiser and
 I want this app to be successful because I believe it can bring communities, families, and followers closer together in a way that has yet to be seen through an app for sharing recipes.
 
 Kin Kitchen isn't just about finding something to cook. **It's about the people we cook for, the recipes we pass down, and the communities we build around the table.**
+
+Join me on my journey of building the worlds best Food Community App.
