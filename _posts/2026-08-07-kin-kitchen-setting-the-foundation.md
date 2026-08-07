@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Kin Kitchen: Setting the Foundation"
+product: kin-kitchen
 author: Greg Hudler
 date: 2026-08-07T16:39:00.000-04:00
 description: The first steps towards Kin Kitchen

@@ -12,6 +12,24 @@ media_folder: "assets/uploads"
 public_folder: "/development-blog/assets/uploads"
 
 collections:
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: "_products"
+    create: true
+    identifier_field: product_id
+    slug: "{{fields.product_id}}"
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Layout, name: layout, widget: hidden, default: product }
+      - { label: Product Name, name: title, widget: string }
+      - { label: Product ID, name: product_id, widget: string, hint: "Lowercase URL-safe ID, for example: kin-kitchen. Do not change after posts use it." }
+      - { label: Status, name: status, widget: select, options: ["Concept", "Planning", "Development", "Alpha", "Beta", "Released", "Active", "Paused", "Archived"], default: "Development" }
+      - { label: Description, name: description, widget: text }
+      - { label: Product Website, name: website, widget: string, required: false }
+      - { label: Sort Order, name: order, widget: number, value_type: int, default: 50, hint: "Lower numbers appear first in product filters." }
+
   - name: posts
     label: Blog Posts
     label_singular: Blog Post
@@ -23,6 +41,14 @@ collections:
     fields:
       - { label: Layout, name: layout, widget: hidden, default: post }
       - { label: Title, name: title, widget: string }
+      - label: Product
+        name: product
+        widget: relation
+        collection: products
+        search_fields: ["title", "product_id"]
+        value_field: product_id
+        display_fields: ["title"]
+        required: true
       - { label: Author, name: author, widget: string, default: "Greg Hudler" }
       - { label: Publish Date, name: date, widget: datetime }
       - { label: Summary, name: description, widget: text, required: false }

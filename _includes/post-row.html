@@ -1,0 +1,23 @@
+<article class="post-row" data-product="{{ include.post.product | default: 'general-development' }}">
+  <div class="post-date">
+    {{ include.post.date | date: "%b" }}
+    <strong>{{ include.post.date | date: "%-d" }}</strong>
+    <small>{{ include.post.date | date: "%Y" }}</small>
+  </div>
+
+  <div>
+    {% assign post_product = site.products | where: "product_id", include.post.product | first %}
+    {% if post_product %}
+      <a class="product-badge" href="{{ post_product.url | relative_url }}">{{ post_product.title }}</a>
+    {% endif %}
+
+    <h2><a href="{{ include.post.url | relative_url }}">{{ include.post.title }}</a></h2>
+    <p>{{ include.post.description | default: include.post.excerpt | strip_html | truncate: 190 }}</p>
+
+    {% if include.post.tags %}
+    <div class="tag-row">
+      {% for tag in include.post.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</article>

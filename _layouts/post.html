@@ -4,6 +4,10 @@ layout: default
 <article class="post shell narrow">
   <a class="back-link" href="{{ '/blog/' | relative_url }}">← All posts</a>
   <div class="post-kicker">// dev log</div>
+  {% assign post_product = site.products | where: "product_id", page.product | first %}
+  {% if post_product %}
+    <a class="product-badge post-product-badge" href="{{ post_product.url | relative_url }}">{{ post_product.title }}</a>
+  {% endif %}
   <h1>{{ page.title }}</h1>
   <div class="post-meta">
     <span>{{ page.date | date: "%B %-d, %Y" }}</span>
@@ -12,7 +16,7 @@ layout: default
   </div>
 
   {% if page.image %}
-  <img class="featured-image" src="{{ page.image | relative_url }}" alt="">
+  <img class="featured-image" src="{{ page.image }}" alt="{{ page.title }}">
   {% endif %}
 
   <div class="post-content">

@@ -13,3 +13,9 @@ defaults:
       type: posts
     values:
       layout: post
+
+
+collections:
+  products:
+    output: true
+    permalink: /products/:name/
