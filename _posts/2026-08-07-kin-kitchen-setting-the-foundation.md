@@ -5,12 +5,12 @@ author: Greg Hudler
 date: 2026-08-07T16:39:00.000-04:00
 description: The first steps towards Kin Kitchen
 tags:
-  - "#ReadySetTheShow"
-image: /development-blog/assets/uploads/screenshot-2026-08-07-165330.jpg
+  - ReadySetTheShow
+image: ""
 ---
-# Kin Kitchen: Just Another Recipe App?
+## Kin Kitchen: Just Another Recipe App?
 
-## The WIIFM
+### The WIIFM
 
 In my personal opinion, the first step to building any application is determining the viability of its purpose. In other words, **why am I building this?**
 
@@ -20,7 +20,7 @@ Every project you work on has to encompass a **WIIFM — "What's In It For Me?"*
 
 Most of the time, the WIIFM is your paycheck from the company you work for. But sometimes, the WIIFM is something that isn't tangible. It's a sense of relief, a sense of accomplishment, or simply creating a tool that makes your life easier.
 
-## My WIIFM
+### My WIIFM
 
 For **Kin Kitchen**, the WIIFM is more than the possibility of an extremely successful mobile application that could bring me tangible wealth *(but that would be nice).* It is about the community that I love to gather with and serve.
 
@@ -32,7 +32,7 @@ It's the homesick husband and wife serving in the military who can get Grandma's
 
 It's the kids' sports team or church youth group that can build a fundraiser and raise money through a community of cooks who bring together flavors from around the world.
 
-## More Than Recipes
+### More Than Recipes
 
 I want this app to be successful because I believe it can bring communities, families, and followers closer together in a way that has yet to be seen through an app for sharing recipes.
 
