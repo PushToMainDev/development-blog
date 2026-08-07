@@ -1,0 +1,27 @@
+---
+layout: default
+title: Blog
+permalink: /blog/
+---
+<section class="page-hero shell">
+  <p class="eyebrow">// archive</p>
+  <h1>Development Blog</h1>
+  <p>Features built, problems solved, mistakes made, and lessons learned.</p>
+</section>
+
+<section class="shell section">
+  <div class="post-list">
+    {% for post in site.posts %}
+    <article class="post-row">
+      <div class="post-date">{{ post.date | date: "%b" }}<strong>{{ post.date | date: "%-d" }}</strong><small>{{ post.date | date: "%Y" }}</small></div>
+      <div>
+        <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        <p>{{ post.description | default: post.excerpt | strip_html | truncate: 190 }}</p>
+        {% if post.tags %}
+        <div class="tag-row">{% for tag in post.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}</div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>

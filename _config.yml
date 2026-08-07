@@ -1,0 +1,15 @@
+title: PushToMainDev
+description: Building, breaking, learning, and shipping.
+url: "https://pushtomaindev.github.io"
+baseurl: "/development-blog"
+author: Greg Hudler
+permalink: /blog/:year/:month/:day/:title/
+markdown: kramdown
+timezone: America/New_York
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post

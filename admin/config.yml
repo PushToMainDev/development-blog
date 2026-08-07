@@ -1,0 +1,32 @@
+backend:
+  name: github
+  repo: PushToMainDev/development-blog
+  branch: main
+  base_url: https://YOUR-OAUTH-BACKEND.vercel.app
+  auth_endpoint: api/auth
+
+publish_mode: editorial_workflow
+site_url: https://pushtomaindev.github.io/development-blog
+display_url: https://pushtomaindev.github.io/development-blog
+
+media_folder: "assets/uploads"
+public_folder: "/development-blog/assets/uploads"
+
+collections:
+  - name: posts
+    label: Blog Posts
+    label_singular: Blog Post
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: Layout, name: layout, widget: hidden, default: post }
+      - { label: Title, name: title, widget: string }
+      - { label: Author, name: author, widget: string, default: "Greg Hudler" }
+      - { label: Publish Date, name: date, widget: datetime }
+      - { label: Summary, name: description, widget: text, required: false }
+      - { label: Tags, name: tags, widget: list, required: false }
+      - { label: Featured Image, name: image, widget: image, required: false }
+      - { label: Body, name: body, widget: markdown }

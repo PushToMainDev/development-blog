@@ -1,0 +1,28 @@
+<section class="comments">
+  <div class="section-label">// discussion</div>
+  <h2>Comments</h2>
+
+  {% if site.giscus_repo_id and site.giscus_category_id %}
+  <script src="https://giscus.app/client.js"
+          data-repo="PushToMainDev/development-blog"
+          data-repo-id="{{ site.giscus_repo_id }}"
+          data-category="Announcements"
+          data-category-id="{{ site.giscus_category_id }}"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="dark"
+          data-lang="en"
+          crossorigin="anonymous"
+          async>
+  </script>
+  {% else %}
+  <div class="setup-note">
+    Comments are ready to connect. Enable GitHub Discussions, configure Giscus,
+    then add <code>giscus_repo_id</code> and <code>giscus_category_id</code> to
+    <code>_config.yml</code>.
+  </div>
+  {% endif %}
+</section>
