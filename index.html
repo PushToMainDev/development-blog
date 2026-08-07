@@ -4,33 +4,80 @@ title: Home
 ---
 <section class="hero">
   <div class="shell">
-    <p class="eyebrow">// developer journal</p>
-    <h1>Building things.<br><span>Learning in public.</span></h1>
-    <p class="hero-copy">A running development log of projects, problems, solutions, and the lessons learned while shipping software.</p>
+    <p class="eyebrow">// development journal</p>
+
+    <h1>
+      Build. Test. Commit.<br>
+      <span>Push to Main.</span>
+    </h1>
+
+    <p class="hero-copy">
+      Follow the development of real web and mobile applications from
+      concept to release. We document the features we build, the problems
+      we encounter, the solutions we implement, and the lessons learned
+      along the way.
+    </p>
+
     <div class="hero-actions">
-      <a class="button primary" href="{{ '/blog/' | relative_url }}">Read the blog →</a>
-      <a class="button" href="{{ '/about/' | relative_url }}">About me</a>
+      <a class="button primary" href="{{ '/blog/' | relative_url }}">
+        Read the Blog →
+      </a>
+
+      <a class="button" href="{{ '/about/' | relative_url }}">
+        About PushToMain
+      </a>
     </div>
   </div>
 </section>
 
+
 <section class="shell section">
+
   <div class="section-head">
     <div>
       <p class="section-label">// latest entries</p>
-      <h2>Recent posts</h2>
+      <h2>Recent Posts</h2>
     </div>
-    <a href="{{ '/blog/' | relative_url }}">View all →</a>
+
+    <a href="{{ '/blog/' | relative_url }}">
+      View All →
+    </a>
   </div>
 
+
   <div class="post-grid">
+
     {% for post in site.posts limit:3 %}
+
     <article class="post-card">
-      <p class="card-date">{{ post.date | date: "%b %-d, %Y" }}</p>
-      <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-      <p>{{ post.description | default: post.excerpt | strip_html | truncate: 150 }}</p>
-      <a class="read-more" href="{{ post.url | relative_url }}">Read post →</a>
+
+      <p class="card-date">
+        {{ post.date | date: "%b %-d, %Y" }}
+      </p>
+
+      <h3>
+        <a href="{{ post.url | relative_url }}">
+          {{ post.title }}
+        </a>
+      </h3>
+
+      <p>
+        {{ post.description
+          | default: post.excerpt
+          | strip_html
+          | truncate: 150 }}
+      </p>
+
+      <a
+        class="read-more"
+        href="{{ post.url | relative_url }}">
+        Read Post →
+      </a>
+
     </article>
+
     {% endfor %}
+
   </div>
+
 </section>
