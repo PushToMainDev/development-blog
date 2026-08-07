@@ -5,7 +5,6 @@ backend:
   base_url: https://pushtomaindev-blog-auth.vercel.app
   auth_endpoint: api/auth
 
-publish_mode: editorial_workflow
 site_url: https://pushtomaindev.github.io/development-blog
 display_url: https://pushtomaindev.github.io/development-blog
 
