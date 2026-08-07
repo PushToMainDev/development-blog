@@ -2,7 +2,7 @@ backend:
   name: github
   repo: PushToMainDev/development-blog
   branch: main
-  base_url: https://YOUR-OAUTH-BACKEND.vercel.app
+  base_url: https://pushtomaindev-blog-auth.vercel.app
   auth_endpoint: api/auth
 
 publish_mode: editorial_workflow
