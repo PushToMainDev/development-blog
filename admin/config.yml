@@ -9,7 +9,7 @@ site_url: https://pushtomaindev.github.io/development-blog
 display_url: https://pushtomaindev.github.io/development-blog
 
 media_folder: "assets/uploads"
-public_folder: "/development-blog/assets/uploads"
+public_folder: "/assets/uploads"
 
 collections:
 
@@ -24,9 +24,14 @@ collections:
     format: frontmatter
 
     fields:
-      - { label: Layout, name: layout, widget: hidden, default: product }
+      - label: Layout
+        name: layout
+        widget: hidden
+        default: product
 
-      - { label: Product Name, name: title, widget: string }
+      - label: Product Name
+        name: title
+        widget: string
 
       - label: Product ID
         name: product_id
@@ -48,14 +53,14 @@ collections:
           - Archived
         default: Development
 
-      - { label: Description, name: description, widget: text }
+      - label: Description
+        name: description
+        widget: text
 
-      - {
-          label: Product Website,
-          name: website,
-          widget: string,
-          required: false
-        }
+      - label: Product Website
+        name: website
+        widget: string
+        required: false
 
       - label: Sort Order
         name: order
@@ -74,9 +79,14 @@ collections:
     format: frontmatter
 
     fields:
-      - { label: Layout, name: layout, widget: hidden, default: post }
+      - label: Layout
+        name: layout
+        widget: hidden
+        default: post
 
-      - { label: Title, name: title, widget: string }
+      - label: Title
+        name: title
+        widget: string
 
       - label: Product
         name: product
@@ -90,40 +100,33 @@ collections:
           - title
         required: true
 
-      - {
-          label: Author,
-          name: author,
-          widget: string,
-          default: "Greg Hudler"
-        }
+      - label: Author
+        name: author
+        widget: string
+        default: "Greg Hudler"
 
-      - {
-          label: Publish Date,
-          name: date,
-          widget: datetime
-        }
+      - label: Publish Date
+        name: date
+        widget: datetime
 
-      - {
-          label: Summary,
-          name: description,
-          widget: text,
-          required: false
-        }
+      - label: Summary
+        name: description
+        widget: text
+        required: false
 
-      - {
-          label: Tags,
-          name: tags,
-          widget: list,
-          required: false
-        }
+      - label: Tags
+        name: tags
+        widget: list
+        required: false
 
       - label: Featured Image
         name: image
         widget: image
         required: false
+        allow_multiple: false
+        media_folder: "/assets/uploads"
+        public_folder: "/assets/uploads"
 
-      - {
-          label: Body,
-          name: body,
-          widget: markdown
-        }
+      - label: Body
+        name: body
+        widget: markdown

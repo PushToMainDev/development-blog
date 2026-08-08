@@ -69,6 +69,24 @@ nav a:hover { color: var(--text); }
 .post-content p, .prose p { color: #cbd5e1; }
 .post-content code, .setup-note code { background: var(--panel2); padding: 2px 5px; border-radius: 4px; }
 .comments { margin-top: 70px; padding-top: 38px; border-top: 1px solid var(--line); }
+.comments h2 {
+  margin: 6px 0 4px;
+  font-size: 1.7rem;
+}
+
+.comments-intro {
+  margin: 0 0 28px;
+  color: var(--muted);
+}
+
+.giscus,
+.giscus-frame {
+  width: 100%;
+}
+
+.giscus-frame {
+  border: 0;
+}
 .setup-note { padding: 18px; border: 1px dashed var(--line); background: var(--panel); color: var(--muted); border-radius: 10px; }
 .site-footer { border-top: 1px solid var(--line); color: var(--muted); }
 .footer-wrap { min-height: 110px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
