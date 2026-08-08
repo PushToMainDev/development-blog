@@ -11,6 +11,10 @@ image: /development-blog/assets/uploads/screenshot-2026-08-07-165330.jpg
 ---
 ## Kin Kitchen: Just Another Recipe App?
 
+Let me begin with telling you a little story that has taught me the value of the individual.  While I was in Film School one of my professors was addressing plots that seemed extremely similar.  He stated that everything in this world worth writing may have already been written, but it hasn't been written by you yet.  We see the idea of innovating something new but the greatest things we have in our world today have been the re-innovation of a product already in existence.  
+
+Everyone knows the wright brothers, but Glenn Curtiss is the one who re-innovated the concept of the plan and brought it to the current design that we know today.  Glenn Curtiss had some skin in the game though, **he had a WIIFM.**
+
 ### The WIIFM
 
 In my personal opinion, the first step to building any application is determining the viability of its purpose. In other words, **why am I building this?**
