@@ -3,12 +3,14 @@ layout: default
 title: About
 permalink: /about/
 ---
+
 <section class="page-hero shell narrow">
-  <p class="eyebrow">// about</p>
+  <p class="eyebrow">&gt;_ about</p>
+
   <h1 class="hero-title">
-      Our Products.<br>
-      <span>&gt;_ Our Vision.</span>
-    </h1>
+    Our Products.<br>
+    <span>&gt;_ Our Vision.</span>
+  </h1>
 
   <p>
     The Push to Main Development Blog is developed and maintained by
@@ -25,41 +27,60 @@ permalink: /about/
 </section>
 
 
-<section class="shell narrow prose section">
+<section class="shell section">
 
-  <h2>Kin Kitchen</h2>
-
-  <p>
-    Kin Kitchen is a mobile application being built for communities of home
-    cooks, families, and food enthusiasts. The goal is to make sharing recipes
-    and culinary experiences simple while respecting the dietary needs,
-    preferences, and safety of everyone gathered around the table.
-  </p>
-
-  <p>
-    Follow along as we build Kin Kitchen piece by piece and work toward making
-    recipe sharing more convenient for families, friends, groups, and
-    communities.
-  </p>
+  <div class="section-head">
+    <div>
+      <p class="section-label">&gt;_ what we're building</p>
+      <h2>Products</h2>
+    </div>
+  </div>
 
 
-  <h2>My Concept Cloud</h2>
+  <div class="product-grid">
 
-  <p>
-    Already available as a beta web application, My Concept Cloud is a
-    platform designed to help storytellers capture creative ideas, organize
-    concepts, and develop those ideas into larger stories and projects.
-  </p>
+    {% assign sorted_products = site.products | sort: "order" %}
 
-  <p>
-    As development continues, we'll share weekly progress, new features,
-    technical challenges, and the decisions that shape the platform.
-  </p>
+    {% for product in sorted_products %}
 
-  <p>
-    <a href="https://myconcept.cloud/" target="_blank" rel="noopener noreferrer">
-      Visit My Concept Cloud →
-    </a>
-  </p>
+      <a
+        class="product-card"
+        href="{{ product.url | relative_url }}"
+      >
+
+        <div class="product-card-top">
+
+          <span class="product-prompt">
+            &gt;_
+          </span>
+
+          {% if product.status %}
+            <span class="product-status">
+              {{ product.status }}
+            </span>
+          {% endif %}
+
+        </div>
+
+
+        <h3>
+          {{ product.title }}
+        </h3>
+
+
+        <p>
+          {{ product.description }}
+        </p>
+
+
+        <span class="product-card-link">
+          View Product →
+        </span>
+
+      </a>
+
+    {% endfor %}
+
+  </div>
 
 </section>
