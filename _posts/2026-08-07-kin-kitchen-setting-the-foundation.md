@@ -7,7 +7,7 @@ date: 2026-08-07T16:39:00.000-04:00
 description: The first steps towards Kin Kitchen
 tags:
   - ReadySetTheShow
-image: /development-blog/assets/uploads/screenshot-2026-08-07-165330.jpg
+image: /assets/uploads/screenshot-2026-08-07-165330.jpg
 ---
 ## Kin Kitchen: Just Another Recipe App?
 
