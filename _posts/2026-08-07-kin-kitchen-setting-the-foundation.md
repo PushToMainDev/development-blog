@@ -11,9 +11,9 @@ image: /development-blog/assets/uploads/screenshot-2026-08-07-165330.jpg
 ---
 ## Kin Kitchen: Just Another Recipe App?
 
-Let me begin with telling you a little story that has taught me the value of the individual.  While I was in Film School one of my professors was addressing plots that seemed extremely similar.  He stated that everything in this world worth writing may have already been written, but it hasn't been written by you yet.  We see the idea of innovating something new but the greatest things we have in our world today have been the re-innovation of a product already in existence.  
+Let me begin with telling you a little story that has taught me the value of the individual.  While I was in Film School one of my professors was addressing plots that seemed extremely similar.  He stated that everything in this world worth writing may have already been written, but it hasn't been written by you yet.  We see the idea of innovating something new as being the most important factor.  The age old saying "It doesn't matter if you have a better product it only matters if you have the first product" resonate through our ears.  But that's not the case. 
 
-Everyone knows the wright brothers, but Glenn Curtiss is the one who re-innovated the concept of the plan and brought it to the current design that we know today.  Glenn Curtiss had some skin in the game though, **he had a WIIFM.**
+Everyone knows the wright brothers, but Glenn Curtiss is the one who re-innovated the concept of the plan and brought it to the current design that we know today. This just goes to show that some of the greatest things we have in our world today have been the re-innovation of a product already in existence. Glenn Curtiss had some skin in the game, he had a plan, a dream, he had a **WIIFM.**
 
 ### The WIIFM
 
@@ -42,5 +42,7 @@ It's the kids' sports team or church youth group that can build a fundraiser and
 I want this app to be successful because I believe it can bring communities, families, and followers closer together in a way that has yet to be seen through an app for sharing recipes.
 
 Kin Kitchen isn't just about finding something to cook. **It's about the people we cook for, the recipes we pass down, and the communities we build around the table.**
+
+Lets be the Glenn Curtiss of the Recipe Apps
 
 Join me on my journey of building the worlds best Food Community App.
