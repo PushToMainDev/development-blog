@@ -1,0 +1,93 @@
+---
+layout: default
+title: Open Source
+permalink: /open-source/
+---
+
+<section class="page-hero shell narrow">
+  <p class="eyebrow">&gt;_ open source</p>
+
+  <h1 class="hero-title">
+    Built in the Open.<br>
+    <span>&gt;_ Build It Too.</span>
+  </h1>
+
+  <p>
+    Some of what we make at PushToMain is meant to be opened up — source code,
+    hardware files, build documentation, and the decisions behind them. These
+    projects are published so other people can study them, reproduce them,
+    change them, and make them better.
+  </p>
+
+  <p>
+    Each project below has its own development log documenting the work as it
+    happens, including the parts that don't go to plan.
+  </p>
+</section>
+
+
+<section class="shell section">
+
+  <div class="section-head">
+    <div>
+      <p class="section-label">&gt;_ open projects</p>
+      <h2>Projects</h2>
+    </div>
+
+    <a href="{{ '/about/' | relative_url }}">All Products →</a>
+  </div>
+
+
+  <div class="product-grid">
+
+    {% assign open_products = site.products | where: "open_source", true | sort: "order" %}
+
+    {% for product in open_products %}
+
+      <a
+        class="product-card"
+        href="{{ product.url | relative_url }}"
+      >
+
+        <div class="product-card-top">
+
+          <span class="product-prompt">
+            &gt;_
+          </span>
+
+          {% if product.status %}
+            <span class="product-status">
+              {{ product.status }}
+            </span>
+          {% endif %}
+
+        </div>
+
+
+        <h3>
+          {{ product.title }}
+        </h3>
+
+
+        <p>
+          {{ product.description }}
+        </p>
+
+
+        <span class="product-card-link">
+          View Blog →
+        </span>
+
+      </a>
+
+    {% else %}
+
+      <p class="empty-state">
+        No open-source projects have been published yet.
+      </p>
+
+    {% endfor %}
+
+  </div>
+
+</section>

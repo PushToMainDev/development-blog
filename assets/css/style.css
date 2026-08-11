@@ -351,3 +351,231 @@ nav a:hover { color: var(--text); }
     min-height: auto;
   }
 }
+
+
+/* Project pages */
+
+.product-tagline {
+  margin: 0 0 18px;
+
+  color: var(--accent);
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+
+  font-size: .95rem;
+  font-weight: 700;
+
+  letter-spacing: .06em;
+}
+
+.product-status.is-open {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.product-notice {
+  max-width: 820px;
+  margin-top: 26px;
+}
+
+.section-lead {
+  max-width: 820px;
+  margin: 0 0 8px;
+
+  color: var(--muted);
+  font-size: 1.07rem;
+}
+
+
+/* Concept artwork */
+
+.concept-figure {
+  margin: 32px 0 0;
+}
+
+.concept-figure img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.concept-figure figcaption {
+  margin-top: 12px;
+
+  color: var(--muted);
+  font-size: .86rem;
+}
+
+
+/* Feature cards */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.feature-card {
+  padding: 26px;
+
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.feature-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+
+/* Split panes */
+
+.split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+
+  margin-top: 30px;
+}
+
+.split-pane {
+  padding: 28px;
+
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.split-pane h3 {
+  margin: 0 0 14px;
+  font-size: 1.35rem;
+}
+
+.split-pane ul {
+  margin: 0;
+  padding-left: 1.2rem;
+
+  color: var(--muted);
+}
+
+.split-pane li + li {
+  margin-top: .45rem;
+}
+
+
+/* Roadmap phases */
+
+.phase-list {
+  border-top: 1px solid var(--line);
+}
+
+.phase-row {
+  display: grid;
+  grid-template-columns: 85px 1fr;
+  gap: 28px;
+
+  padding: 26px 0;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.phase-num {
+  margin: 0;
+
+  color: var(--accent);
+
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+
+  font-size: 1.6rem;
+  font-weight: 700;
+
+  line-height: 1.2;
+}
+
+.phase-row h3 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+}
+
+.phase-row p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.not-locked {
+  max-width: 820px;
+  margin-top: 30px;
+}
+
+.not-locked strong {
+  color: var(--accent2);
+}
+
+
+/* Open source panel */
+
+.open-source-panel {
+  padding: 38px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(103, 232, 249, .06),
+      rgba(167, 243, 208, .03)
+    ),
+    var(--panel);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.open-source-panel h2 {
+  margin: 4px 0 16px;
+  font-size: 2rem;
+}
+
+.open-source-actions {
+  margin: 26px 0 0;
+}
+
+
+/* Project pages on mobile */
+
+@media (max-width: 760px) {
+
+  .feature-grid,
+  .split-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .phase-row {
+    grid-template-columns: 58px 1fr;
+    gap: 16px;
+  }
+
+  .open-source-panel {
+    padding: 26px;
+  }
+}

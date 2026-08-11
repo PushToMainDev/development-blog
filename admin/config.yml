@@ -68,6 +68,197 @@ collections:
         value_type: int
         default: 50
 
+      - label: Open Source Project
+        name: open_source
+        widget: boolean
+        default: false
+        hint: "Turn on to list this project on the Open Source page."
+
+      - label: Source Repository
+        name: repo
+        widget: string
+        required: false
+        hint: "Full URL, for example: https://github.com/PushToMainDev/curiosprite"
+
+      - label: License
+        name: license
+        widget: string
+        required: false
+        hint: "For example: MIT, Apache-2.0, GPL-3.0, CERN-OHL-S-2.0"
+
+      - label: Tagline
+        name: tagline
+        widget: string
+        required: false
+
+      - label: Notice
+        name: notice
+        widget: text
+        required: false
+        hint: "Optional callout shown under the hero, e.g. a not-finished-yet disclaimer."
+
+      - label: Tech / Parts
+        name: tech
+        widget: list
+        required: false
+        hint: "Shown as tags under the hero."
+
+      - label: Concept Image
+        name: image
+        widget: image
+        required: false
+        allow_multiple: false
+        media_folder: "/assets/uploads"
+        public_folder: "/assets/uploads"
+
+      - label: Concept Image Caption
+        name: image_caption
+        widget: text
+        required: false
+
+      - label: Vision Section Label
+        name: vision_label
+        widget: string
+        required: false
+        default: the vision
+
+      - label: Vision Heading
+        name: vision_heading
+        widget: string
+        required: false
+
+      - label: Vision
+        name: vision
+        widget: text
+        required: false
+
+      - label: Plan Section Label
+        name: plan_label
+        widget: string
+        required: false
+        default: what we want to make
+
+      - label: Plan Heading
+        name: plan_heading
+        widget: string
+        required: false
+
+      - label: Plan Cards
+        name: plan
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.title}}"
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Body, name: body, widget: text }
+
+      - label: Hardware Section Label
+        name: hardware_label
+        widget: string
+        required: false
+        default: hardware direction
+
+      - label: Hardware Heading
+        name: hardware_heading
+        widget: string
+        required: false
+
+      - label: Hardware Intro
+        name: hardware_intro
+        widget: text
+        required: false
+
+      - label: Hardware Column 1 Title
+        name: hardware_now_title
+        widget: string
+        required: false
+
+      - label: Hardware Column 1 Items
+        name: hardware_now
+        widget: list
+        required: false
+
+      - label: Hardware Column 2 Title
+        name: hardware_later_title
+        widget: string
+        required: false
+
+      - label: Hardware Column 2 Items
+        name: hardware_later
+        widget: list
+        required: false
+
+      - label: Software Section Label
+        name: software_label
+        widget: string
+        required: false
+        default: software direction
+
+      - label: Software Heading
+        name: software_heading
+        widget: string
+        required: false
+
+      - label: Software Cards
+        name: software
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.title}}"
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Body, name: body, widget: text }
+
+      - label: Roadmap Section Label
+        name: roadmap_label
+        widget: string
+        required: false
+        default: development roadmap
+
+      - label: Roadmap Heading
+        name: roadmap_heading
+        widget: string
+        required: false
+
+      - label: Roadmap Phases
+        name: roadmap
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.title}}"
+        hint: "Phase numbers are generated automatically from this order."
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Body, name: body, widget: text }
+
+      - label: Not Locked Yet
+        name: not_locked
+        widget: text
+        required: false
+        hint: "Decisions that have not been made yet. Shown under the roadmap."
+
+      - label: Open Source Section Label
+        name: open_source_label
+        widget: string
+        required: false
+        default: open source plan
+
+      - label: Open Source Heading
+        name: open_source_heading
+        widget: string
+        required: false
+
+      - label: Open Source Summary
+        name: open_source_summary
+        widget: text
+        required: false
+
+      - label: Extra Page Content
+        name: body
+        widget: markdown
+        required: false
+
 
   - name: posts
     label: Blog Posts

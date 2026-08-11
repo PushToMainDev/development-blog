@@ -7,15 +7,182 @@ layout: default
     {{ page.title }}.<br>
     <span>&gt;_ Development Log.</span>
   </h1>
+
+  {% if page.tagline %}
+    <p class="product-tagline">{{ page.tagline }}</p>
+  {% endif %}
+
   <p>{{ page.description }}</p>
 
   <div class="product-meta">
     {% if page.status %}<span class="product-status">{{ page.status }}</span>{% endif %}
+    {% if page.open_source %}<span class="product-status is-open">Open Source</span>{% endif %}
+    {% if page.license %}<span class="product-status">{{ page.license }}</span>{% endif %}
+    {% if page.repo %}
+      <a class="product-site-link" href="{{ page.repo }}" target="_blank" rel="noopener noreferrer">View Source →</a>
+    {% endif %}
     {% if page.website %}
       <a class="product-site-link" href="{{ page.website }}" target="_blank" rel="noopener noreferrer">Visit Product →</a>
     {% endif %}
   </div>
+
+  {% if page.notice %}
+    <p class="setup-note product-notice">{{ page.notice }}</p>
+  {% endif %}
+
+  {% if page.tech %}
+    <div class="tag-row">
+      {% for item in page.tech %}<span class="tag">{{ item }}</span>{% endfor %}
+    </div>
+  {% endif %}
 </section>
+
+{% if page.vision or page.image %}
+  <section class="shell section">
+    <div class="section-head">
+      <div>
+        <p class="section-label">// {{ page.vision_label | default: "the vision" }}</p>
+        <h2>{{ page.vision_heading | default: "The Vision" }}</h2>
+      </div>
+    </div>
+
+    {% if page.vision %}<p class="section-lead">{{ page.vision }}</p>{% endif %}
+
+    {% if page.image %}
+      <figure class="concept-figure">
+        <img src="{{ page.image | relative_url }}" alt="{{ page.title }} concept artwork" loading="lazy">
+        {% if page.image_caption %}<figcaption>{{ page.image_caption }}</figcaption>{% endif %}
+      </figure>
+    {% endif %}
+  </section>
+{% endif %}
+
+{% if page.plan %}
+  <section class="shell section">
+    <div class="section-head">
+      <div>
+        <p class="section-label">// {{ page.plan_label | default: "what we want to make" }}</p>
+        <h2>{{ page.plan_heading | default: "The Plan" }}</h2>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      {% for item in page.plan %}
+        <article class="feature-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if page.hardware_now or page.hardware_later %}
+  <section class="shell section">
+    <div class="section-head">
+      <div>
+        <p class="section-label">// {{ page.hardware_label | default: "hardware direction" }}</p>
+        <h2>{{ page.hardware_heading | default: "Hardware" }}</h2>
+      </div>
+    </div>
+
+    {% if page.hardware_intro %}<p class="section-lead">{{ page.hardware_intro }}</p>{% endif %}
+
+    <div class="split-grid">
+      {% if page.hardware_now %}
+        <div class="split-pane">
+          <h3>{{ page.hardware_now_title | default: "Prototype" }}</h3>
+          <ul>
+            {% for item in page.hardware_now %}<li>{{ item }}</li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if page.hardware_later %}
+        <div class="split-pane">
+          <h3>{{ page.hardware_later_title | default: "Later Goals" }}</h3>
+          <ul>
+            {% for item in page.hardware_later %}<li>{{ item }}</li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+
+{% if page.software %}
+  <section class="shell section">
+    <div class="section-head">
+      <div>
+        <p class="section-label">// {{ page.software_label | default: "software direction" }}</p>
+        <h2>{{ page.software_heading | default: "Software" }}</h2>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      {% for item in page.software %}
+        <article class="feature-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.body }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+{% if page.roadmap %}
+  <section class="shell section">
+    <div class="section-head">
+      <div>
+        <p class="section-label">// {{ page.roadmap_label | default: "development roadmap" }}</p>
+        <h2>{{ page.roadmap_heading | default: "Roadmap" }}</h2>
+      </div>
+    </div>
+
+    <div class="phase-list">
+      {% for item in page.roadmap %}
+        <div class="phase-row">
+          <p class="phase-num">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</p>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.body }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if page.not_locked %}
+      <p class="setup-note not-locked">
+        <strong>Not locked yet:</strong> {{ page.not_locked }}
+      </p>
+    {% endif %}
+  </section>
+{% endif %}
+
+{% if page.open_source_summary %}
+  <section class="shell section">
+    <div class="open-source-panel">
+      <p class="section-label">// {{ page.open_source_label | default: "open source plan" }}</p>
+      <h2>{{ page.open_source_heading | default: "Open Source" }}</h2>
+      <p class="section-lead">{{ page.open_source_summary }}</p>
+
+      {% if page.repo %}
+        <p class="open-source-actions">
+          <a class="button primary" href="{{ page.repo }}" target="_blank" rel="noopener noreferrer">View the Repository →</a>
+        </p>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+
+{% assign extra_content = content | strip %}
+{% if extra_content != "" %}
+  <section class="shell section narrow">
+    <div class="post-content">
+      {{ content }}
+    </div>
+  </section>
+{% endif %}
 
 <section class="shell section">
   <div class="section-head">
