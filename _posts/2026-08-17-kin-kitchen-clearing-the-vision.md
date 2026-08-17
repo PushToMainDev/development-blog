@@ -7,7 +7,7 @@ date: 2026-08-17T11:52:00.000-04:00
 description: What will kin kitchen look like?
 image: /assets/uploads/style-tile.jpg
 ---
-## Kin Kitchen: Were not Drafting, Designing . . .  with style!
+## Kin Kitchen: We're not Drafting, We're Designing . . .  with style!
 ### The Design Dilemma! 
 
 When a consumer looks at what goes into an app one thing they will look over if done correctly is the design of the UI and UX. When you're building an app that is meant to bridge different generations of people you need to build one UI to rule them all.  Some things we over look is the simplicity of colors when desining our applications.  There is a theory behind it.  While I chose a lot of my colors due to the feel of ripe food, the color science has also already made that correlation with the yellows and reds.  I want the feel of this app to be the outdoors gathering and giant meal that familes and friends sahre after a long day of harvesting.  This app needs to feel like the warmth of home and community even if you never experienced it yourself.  Next is the readability of the text and the separation from titles to information. Stop looking at it as ***"What will grab their attention first"*** we all know that the right text will do that.  Now is the time to ask **"What commands their attention first"** this is where we place into the wireframe and mock up the key elements that will build out the UI to make the UX natural.
