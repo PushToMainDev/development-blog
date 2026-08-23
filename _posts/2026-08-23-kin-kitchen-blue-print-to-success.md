@@ -8,13 +8,13 @@ description: The plan is getting set development is about to start.  What does
   it take to get all of our ducks in a row?
 tags: []
 ---
-# Kin Kitchen: From an Idea to a Blueprint
+## A full week of planning saves a month of regression bugs.
 
 Last week, Kin Kitchen was still largely an idea. I knew the problem I wanted to solve and had a growing list of features that could make the application useful, but there is a big difference between knowing what you want an application to do and having a plan for how to build it.
 
 This week was about creating that plan.
 
-## Turning Features Into Requirements
+### Turning Features Into Requirements
 
 One of the biggest challenges this week was defining what Kin Kitchen actually needs to do.
 
@@ -28,7 +28,7 @@ Instead of trying to build everything at once, I now have a clear definition of 
 
 ![](/assets/uploads/screenshot-2026-08-22-at-6.05.53 pm.png)
 
-## Mapping the User Experience
+### Mapping the User Experience
 
 After defining the requirements, I created use cases for six major Kin Kitchen workflows:
 
@@ -49,9 +49,9 @@ A dish might need refrigeration. It might need access to electricity or need to 
 
 That meant a gathering dish couldn't simply be treated as a text field.
 
-![](/assets/uploads/supabase-data-schema.png)
 
-## Designing the Data Behind Kin Kitchen
+
+### Designing the Data Behind Kin Kitchen
 
 The solution was to design the database so a gathering dish can exist independently while optionally referencing an existing Kin Kitchen recipe.
 
@@ -63,7 +63,7 @@ The database architecture grew from there.
 
 The current Kin Kitchen schema connects authentication, user profiles, dietary information, recipes, ingredients, allergens, gatherings, participants, dishes, cookbooks, recipe sharing, and notifications through Supabase and PostgreSQL.
 
-\[INSERT ERD IMAGE HERE]
+![](/assets/uploads/supabase-data-schema.png)
 
 One of the most important parts of the architecture is the dietary system.
 
@@ -71,15 +71,15 @@ Kin Kitchen is intended to help people understand potential dietary conflicts, b
 
 Instead, Kin Kitchen will identify potential conflicts and show the ingredient associated with the warning. The user receives useful information without the application pretending it can guarantee food safety.
 
-![](/assets/uploads/gathering-screens.png)
 
-## From Architecture to Wireframes
+
+### From Architecture to Wireframes
 
 Once the requirements, use cases, and database structure were established, I moved into Figma and started creating the first Kin Kitchen wireframes.
 
 These are intentionally low-fidelity. Right now, I care more about information hierarchy and user flow than colors, typography, or polished graphics.
 
-\[INSERT WIREFRAME IMAGE HERE]
+![](/assets/uploads/gathering-screens.png)
 
 Wireframing has already caught things that looked fine in the design document.
 
@@ -89,7 +89,7 @@ The database already supported that relationship, but the interface didn't.
 
 That is exactly the type of problem I want to find now instead of after I've already written the SwiftUI views and connected everything to Supabase.
 
-## What We Accomplished This Week
+### What We Accomplished This Week
 
 This was primarily a planning and design week, but a lot of the foundation for Kin Kitchen is now complete.
 
@@ -142,7 +142,7 @@ Seeing that list written out makes it pretty clear that this week wasn't just do
 
 We built the blueprint.
 
-## What's Next?
+### What's Next?
 
 The next step is continuing the wireframes and beginning to turn this architecture into the actual Kin Kitchen application.
 
