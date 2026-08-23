@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Kin Kitchen: Blue Print to Success"
+title: "Kin Kitchen: The Blue Print to Success"
 product: kin-kitchen
 author: Greg Hudler
 date: 2026-08-23T12:05:00.000-04:00
-description: The plan is getting set development is about to start.  What does
+description: The plan is getting set, development is about to start.  What does
   it take to get all of our ducks in a row?
 tags: []
 ---
@@ -13,7 +13,9 @@ tags: []
 With last weeks being full of conceptualizations and a wish list the size of a back to school supplies list we had a lot of work to get all of this managed in the correct way.  Knowing what you want to happen in your application and planning how it will actually happen is the key to a successful development.  Every item on the wishlist becomes a feature and each of those features require a plan to implement.
 
 This week was about creating that plan.
+
 ---
+
 ### Turning Features Into Requirements
 
 The largest task this week was figuring out the features that Kin Kitchen was going to have so it can do what I envisioned it to do.  How do you make sure that you don't miss a feature?  With user stories.  Here is an example of a user story that was used for this app.  It lists the feature and then the requirements that have to be implemented to make this feature a reality.  An easy workflow when you look at it.
@@ -40,7 +42,9 @@ After seeing the length of the list that we just made it can become overwhelming
 Next we have the other sections of Alpha and Beta.  The two last sections that need to be done to get the core concept of the application up and going for a happy release.
 
 With those established I could now move on to the next stage of planning how you would navigate through the application.
+
 ---
+
 ### Mapping the User Experience
 
 ![](/development-blog/assets/uploads/FlowChart.png)
@@ -55,7 +59,9 @@ The workflows is a great way to see visually what views are going to be needed a
 * Creating and organizing a cookbook
 
 These workflows allow us to see other features that may need to be added in, and some times the requirements them selves change or get added to.  When I was working out the Gathering workflow it became apparent how in depth we are going to have to rely on the allergen alert workflow which needs to be an element of the application that is robust and error free.
+
 ---
+
 ### Designing the Data Behind Kin Kitchen
 
 Cloud storage on mobile is a must.  Where do we go for thsi cloud storage.  My favorite solution for this is Supabase.  The ability to build profiles while implementing authentication and storage buckets all in one place make this a no brainer for this.
@@ -65,7 +71,9 @@ Breaking down the needs for the data fields and tables became large project in i
 The current Kin Kitchen schema connects authentication, user profiles, dietary information, recipes, ingredients, allergens, gatherings, participants, dishes, cookbooks, recipe sharing, and notifications through Supabase and PostgreSQL.
 
 ![](/development-blog/assets/uploads/supabase-data-schema.png)
+
 ---
+
 ### From Architecture to Wireframes
 
 Once the requirements, use cases, and database structure were established, I moved into Figma and started creating the first Kin Kitchen wireframes.
@@ -77,11 +85,13 @@ These are intentionally low-fidelity. Right now, I care more about information h
 While this was one of my least favorite parts of planning, wire-framing has quickly become one of my most enjoyable part of planning.  We now know what elements we can reuse over and over again and how to built them properly in the Swift resources file.  A button that needs text and is a certain color that is used in multiple screens has now found its own function in swift which has the text element.  A great design tool that helps you revise the resources file.
 
 ---
+
 ### Ready Set Sprint
 
 This week we also planned our first sprint in Jira where we were able to estimate time for each of the items on the first sprint and effectively plan out our first sprint in a realistic time layout.  The task of putting in each of the tasks with the criteria for what should be completed and what testing is needed to verify that the tasks were complete took a bit of time as well.  These descriptions allowed me to know what kind of timeline was needed for each task and each milestone as well.
 
 ---
+
 ### What We Accomplished This Week
 
 This was primarily a planning and design week, but a lot of the foundation for Kin Kitchen is now complete.
