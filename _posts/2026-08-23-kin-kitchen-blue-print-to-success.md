@@ -26,7 +26,7 @@ To keep the project from becoming an endless list of features, I separated the r
 
 Instead of trying to build everything at once, I now have a clear definition of what the first working version needs to accomplish and where additional features belong later in development.
 
-![](/assets/uploads/screenshot-2026-08-22-at-6.05.53 pm.png)
+![](/assets/uploads/FlowChart.png)
 
 ### Mapping the User Experience
 
