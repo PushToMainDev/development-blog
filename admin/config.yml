@@ -108,8 +108,7 @@ collections:
         widget: image
         required: false
         allow_multiple: false
-        media_folder: "assets/uploads"
-        public_folder: "/development-blog/assets/uploads"
+  
 
       - label: Concept Image Caption
         name: image_caption
@@ -315,8 +314,6 @@ collections:
         widget: image
         required: false
         allow_multiple: false
-        media_folder: "assets/uploads"
-        public_folder: "/development-blog/assets/uploads"
 
       - label: Body
         name: body
