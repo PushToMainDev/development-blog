@@ -10,27 +10,42 @@ tags: []
 ---
 ## A full week of planning saves a month of regression bugs.
 
-Last week, Kin Kitchen was still largely an idea. I knew the problem I wanted to solve and had a growing list of features that could make the application useful, but there is a big difference between knowing what you want an application to do and having a plan for how to build it.
+With last weeks being full of conceptualizations and a wish list the size of a back to school supplies list we had a lot of work to get all of this managed in the correct way.  Knowing what you want to happen in your application and planning how it will actually happen is the key to a successful development.  Every item on the wishlist becomes a feature and each of those features require a plan to implement.
 
 This week was about creating that plan.
-
+---
 ### Turning Features Into Requirements
 
-One of the biggest challenges this week was defining what Kin Kitchen actually needs to do.
+The largest task this week was figuring out the features that Kin Kitchen was going to have so it can do what I envisioned it to do.  How do you make sure that you don't miss a feature?  With user stories.  Here is an example of a user story that was used for this app.  It lists the feature and then the requirements that have to be implemented to make this feature a reality.  An easy workflow when you look at it.
 
-Saying that users should be able to "organize a gathering" sounds simple until you start breaking down what that means. A host needs to create the gathering, choose a date and location, identify what food is needed, invite people, and see what everyone is bringing. Guests need to accept invitations, see what is still needed, and choose what they want to contribute.
+***User Story → Feature → Requirements***
 
-The same thing happened with recipes, dietary profiles, cookbooks, and recipe sharing.
+**User Story:**  
+As a guest, I want to select what I am bringing to a gathering so that everyone can see what food is planned.
 
-To keep the project from becoming an endless list of features, I separated the requirements into MVP, Alpha, Beta, and Version 2.0 milestones. This gave Kin Kitchen something it desperately needed: boundaries.
+**Feature:**  
+Gathering Dish Contribution
 
-Instead of trying to build everything at once, I now have a clear definition of what the first working version needs to accomplish and where additional features belong later in development.
+**Requirements:**
+- The application must allow guests to add or claim a dish.
+- The application must display who is bringing each dish.
+- The application must allow a dish to be linked to an existing recipe.
+- The application must allow dish needs such as refrigeration or electricity to be identified.
+- The application must allow required supplies such as serving utensils to be identified.
+
+When we look at the simplicity of one item we start to see features that we need to build and some requirements that can but utilized by multiple features.  A list of these user stories that encompass all aspects of the app matched with features identified and requirements listed give us a great starting point for planning out the rest of the build.
+
+After seeing the length of the list that we just made it can become overwhelming as to what should i start with first.  Thats where we look into the stages.  What is the Minimum Viable Product (MVP)?  Is this considered what can be seen as a functional app or is this the ***"Bare minimum"*** for what you wanted your vision to do.  Im my opinion the MVP is the minimum set of features to be deemed useful by a user who just discovers the tool.  This way if something happens between MVP Alpha and Beta there is still a project you can show the world or use as concept to gain founding for.
+
+Next we have the other sections of Alpha and Beta.  The two last sections that need to be done to get the core concept of the application up and going for a happy release.
+
+With those established I could now move on to the next stage of planning how you would navigate through the application.
+---
+### Mapping the User Experience
 
 ![](/development-blog/assets/uploads/FlowChart.png)
 
-### Mapping the User Experience
-
-After defining the requirements, I created use cases for six major Kin Kitchen workflows:
+The workflows is a great way to see visually what views are going to be needed and what functions are repeating and can be in a global or higher level helper file.  Above is one of the workflows i amde but all together there were 6 as listed below:
 
 * Creating an account and dietary profile
 * Creating a recipe
@@ -39,56 +54,34 @@ After defining the requirements, I created use cases for six major Kin Kitchen w
 * Sharing a recipe and checking for dietary conflicts
 * Creating and organizing a cookbook
 
-Creating these flows exposed problems that weren't obvious when the features only existed as ideas.
-
-A good example was adding a dish to a gathering.
-
-Originally, this sounded like a simple process: enter the dish and tell everyone what you're bringing. Once I mapped the workflow, I realized there was much more information involved.
-
-A dish might need refrigeration. It might need access to electricity or need to remain warm. Someone may need to bring a serving spoon, extension cord, or other supplies. The dish may also already exist as one of the user's saved recipes.
-
-That meant a gathering dish couldn't simply be treated as a text field.
-
-
-
+These workflows allow us to see other features that may need to be added in, and some times the requirements them selves change or get added to.  When I was working out the Gathering workflow it became apparent how in depth we are going to have to rely on the allergen alert workflow which needs to be an element of the application that is robust and error free.
+---
 ### Designing the Data Behind Kin Kitchen
 
-The solution was to design the database so a gathering dish can exist independently while optionally referencing an existing Kin Kitchen recipe.
+Cloud storage on mobile is a must.  Where do we go for thsi cloud storage.  My favorite solution for this is Supabase.  The ability to build profiles while implementing authentication and storage buckets all in one place make this a no brainer for this.
 
-I also separated dish needs and dish supplies into their own relationships. This allows a single dish to have multiple requirements without changing the original recipe.
-
-For example, someone could bring a saved lasagna recipe while also indicating that the dish needs to stay warm, requires electricity, and needs a serving spatula.
-
-The database architecture grew from there.
+Breaking down the needs for the data fields and tables became large project in itself that was checked for efficiency with AI.  Thankfully I was able identify some issues with my planning and fixed those gaps and design flaws to make this ready for expansion and the lightest version needed compartmentalized effectively. 
 
 The current Kin Kitchen schema connects authentication, user profiles, dietary information, recipes, ingredients, allergens, gatherings, participants, dishes, cookbooks, recipe sharing, and notifications through Supabase and PostgreSQL.
 
 ![](/development-blog/assets/uploads/supabase-data-schema.png)
-
-One of the most important parts of the architecture is the dietary system.
-
-Kin Kitchen is intended to help people understand potential dietary conflicts, but I don't want the application claiming that a food is "safe." Allergies are too serious for that, and ingredient information alone cannot account for every possibility.
-
-Instead, Kin Kitchen will identify potential conflicts and show the ingredient associated with the warning. The user receives useful information without the application pretending it can guarantee food safety.
-
-
-
+---
 ### From Architecture to Wireframes
 
 Once the requirements, use cases, and database structure were established, I moved into Figma and started creating the first Kin Kitchen wireframes.
 
-These are intentionally low-fidelity. Right now, I care more about information hierarchy and user flow than colors, typography, or polished graphics.
+These are intentionally low-fidelity. Right now, I care more about information hierarchy and user flow than colors, typography, or polished graphics.  I want to make sure that I have a clear vision of what each model will look like along with what elements are intuitive to the user.
 
 ![](/development-blog/assets/uploads/gathering-screens.png)
 
-Wireframing has already caught things that looked fine in the design document.
+While this was one of my least favorite parts of planning, wire-framing has quickly become one of my most enjoyable part of planning.  We now know what elements we can reuse over and over again and how to built them properly in the Swift resources file.  A button that needs text and is a certain color that is used in multiple screens has now found its own function in swift which has the text element.  A great design tool that helps you revise the resources file.
 
-While working on the Add Dish screen, for example, I realized there needed to be a visible option to associate the dish with an existing recipe.
+---
+### Ready Set Sprint
 
-The database already supported that relationship, but the interface didn't.
+This week we also planned our first sprint in Jira where we were able to estimate time for each of the items on the first sprint and effectively plan out our first sprint in a realistic time layout.  The task of putting in each of the tasks with the criteria for what should be completed and what testing is needed to verify that the tasks were complete took a bit of time as well.  These descriptions allowed me to know what kind of timeline was needed for each task and each milestone as well.
 
-That is exactly the type of problem I want to find now instead of after I've already written the SwiftUI views and connected everything to Supabase.
-
+---
 ### What We Accomplished This Week
 
 This was primarily a planning and design week, but a lot of the foundation for Kin Kitchen is now complete.
@@ -140,14 +133,10 @@ This was primarily a planning and design week, but a lot of the foundation for K
 
 Seeing that list written out makes it pretty clear that this week wasn't just documentation.
 
-We built the blueprint.
+We built the blueprint, and have a pretty clear path to success.
 
 ### What's Next?
 
-The next step is continuing the wireframes and beginning to turn this architecture into the actual Kin Kitchen application.
+Refining the wireframes so that we can see the actual vision of the app will help us realize what elements we can reuse to establish uniformity and branding look across all views.
 
-There will undoubtedly be things that change once development begins. I'm expecting that. The important difference is that when I open Xcode, I'm no longer starting with a blank project and a collection of ideas.
-
-I have requirements telling me what needs to be built, use cases showing how users should move through it, an ERD showing how the data connects, wireframes showing how that information reaches the user, and a development plan for putting it all together.
-
-Now it's time to start building.
+Another thing that needs to be addressed is ensuring that the Dietary needs / allergies alerts are listed as a safety measure but now to be taken as the only warning.  Dietary needs should be the responsibility of the user although quickly identifying known allergies is a small feature to make life easier.
