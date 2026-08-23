@@ -9,7 +9,7 @@ site_url: https://pushtomaindev.github.io/development-blog
 display_url: https://pushtomaindev.github.io/development-blog
 
 media_folder: "assets/uploads"
-public_folder: "/assets/uploads"
+public_folder: "/development-blog/assets/uploads"
 
 collections:
 
@@ -108,8 +108,8 @@ collections:
         widget: image
         required: false
         allow_multiple: false
-        media_folder: "/assets/uploads"
-        public_folder: "/assets/uploads"
+        media_folder: "assets/uploads"
+        public_folder: "/development-blog/assets/uploads"
 
       - label: Concept Image Caption
         name: image_caption
@@ -315,8 +315,8 @@ collections:
         widget: image
         required: false
         allow_multiple: false
-        media_folder: "/assets/uploads"
-        public_folder: "/assets/uploads"
+        media_folder: "assets/uploads"
+        public_folder: "/development-blog/assets/uploads"
 
       - label: Body
         name: body
