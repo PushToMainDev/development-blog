@@ -26,7 +26,7 @@ To keep the project from becoming an endless list of features, I separated the r
 
 Instead of trying to build everything at once, I now have a clear definition of what the first working version needs to accomplish and where additional features belong later in development.
 
-![](/assets/uploads/FlowChart.png)
+![](/development-blog/assets/uploads/FlowChart.png)
 
 ### Mapping the User Experience
 
@@ -63,7 +63,7 @@ The database architecture grew from there.
 
 The current Kin Kitchen schema connects authentication, user profiles, dietary information, recipes, ingredients, allergens, gatherings, participants, dishes, cookbooks, recipe sharing, and notifications through Supabase and PostgreSQL.
 
-![](/assets/uploads/supabase-data-schema.png)
+![](/development-blog/assets/uploads/supabase-data-schema.png)
 
 One of the most important parts of the architecture is the dietary system.
 
@@ -79,7 +79,7 @@ Once the requirements, use cases, and database structure were established, I mov
 
 These are intentionally low-fidelity. Right now, I care more about information hierarchy and user flow than colors, typography, or polished graphics.
 
-![](/assets/uploads/gathering-screens.png)
+![](/development-blog/assets/uploads/gathering-screens.png)
 
 Wireframing has already caught things that looked fine in the design document.
 
