@@ -49,8 +49,16 @@ layout: default
     {% if page.vision %}<p class="section-lead">{{ page.vision }}</p>{% endif %}
 
     {% if page.image %}
+      {% assign concept_src = page.image %}
+      {% if site.baseurl != "" %}
+        {% assign baseurl_size = site.baseurl | size %}
+        {% assign src_head = concept_src | slice: 0, baseurl_size %}
+        {% if src_head == site.baseurl %}
+          {% assign concept_src = concept_src | remove_first: site.baseurl %}
+        {% endif %}
+      {% endif %}
       <figure class="concept-figure">
-        <img src="{{ page.image | relative_url }}" alt="{{ page.title }} concept artwork" loading="lazy">
+        <img src="{{ concept_src | relative_url }}" alt="{{ page.title }} concept artwork" loading="lazy">
         {% if page.image_caption %}<figcaption>{{ page.image_caption }}</figcaption>{% endif %}
       </figure>
     {% endif %}

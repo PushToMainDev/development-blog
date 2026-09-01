@@ -5,7 +5,7 @@ product: my-concept-cloud
 author: Greg Hudler
 date: 2026-08-25T01:01:00.000-04:00
 description: Great new features in Novel Creation
-image: /development-blog/assets/uploads/export-available.jpg
+image: /assets/uploads/export-available.jpg
 ---
 ![]()
 

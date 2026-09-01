@@ -16,9 +16,21 @@ layout: default
   </div>
 
 {% if page.image and page.image != "" %}
+  {% comment %}
+    The CMS sometimes writes the image path with the baseurl already on it.
+    Strip it first so relative_url can't prepend a second copy.
+  {% endcomment %}
+  {% assign featured_src = page.image %}
+  {% if site.baseurl != "" %}
+    {% assign baseurl_size = site.baseurl | size %}
+    {% assign src_head = featured_src | slice: 0, baseurl_size %}
+    {% if src_head == site.baseurl %}
+      {% assign featured_src = featured_src | remove_first: site.baseurl %}
+    {% endif %}
+  {% endif %}
   <img
     class="featured-image"
-    src="{{ page.image | relative_url }}"
+    src="{{ featured_src | relative_url }}"
     alt="{{ page.title }}"
   >
 {% endif %}

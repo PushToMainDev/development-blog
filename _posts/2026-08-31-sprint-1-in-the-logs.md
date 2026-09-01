@@ -11,7 +11,7 @@ tags:
   - SwitfUI
   - Supabase
   - Development
-image: /development-blog/assets/uploads/profile.png
+image: /assets/uploads/profile.png
 ---
 ## From an Idea to an Actual App
 
