@@ -23,5 +23,90 @@
 
 <body>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+    // "YouTube Video" button for the rich text editor. Inserts a Liquid
+    // include that _includes/youtube.html renders as a responsive embed.
+    //
+    // The Liquid delimiters are assembled from pieces so this file stays
+    // safe if it ever gains YAML front matter and Jekyll starts processing
+    // it. Without front matter Jekyll copies this file verbatim.
+    (function () {
+      var OPEN = '{' + '%';
+      var CLOSE = '%' + '}';
+
+      // Accepts a full YouTube URL in any common shape, or a bare video ID.
+      function extractId(input) {
+        if (!input) return '';
+        var value = String(input).trim();
+
+        var fromUrl = value.match(
+          /(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([A-Za-z0-9_-]{6,})/
+        );
+        if (fromUrl) return fromUrl[1];
+
+        if (/^[A-Za-z0-9_-]{6,}$/.test(value)) return value;
+
+        return '';
+      }
+
+      function clean(text) {
+        return String(text || '').replace(/["\r\n]/g, '').trim();
+      }
+
+      CMS.registerEditorComponent({
+        id: 'youtube',
+        label: 'YouTube Video',
+        icon: 'image',
+
+        fields: [
+          {
+            name: 'url',
+            label: 'YouTube URL or Video ID',
+            widget: 'string',
+            hint: 'Paste the full link, for example https://youtu.be/dQw4w9WgXcQ'
+          },
+          {
+            name: 'title',
+            label: 'Description (for screen readers)',
+            widget: 'string',
+            required: false,
+            hint: 'Optional. Describes the video for people using a screen reader.'
+          }
+        ],
+
+        pattern: new RegExp(
+          '^\\{%\\s*include\\s+youtube\\.html\\s+id="([A-Za-z0-9_-]{6,})"' +
+          '(?:\\s+title="([^"]*)")?\\s*%\\}$'
+        ),
+
+        fromBlock: function (match) {
+          return { url: match[1], title: match[2] || '' };
+        },
+
+        toBlock: function (data) {
+          var id = extractId(data && data.url);
+          if (!id) return '';
+
+          var title = clean(data && data.title);
+          var block = OPEN + ' include youtube.html id="' + id + '"';
+          if (title) block += ' title="' + title + '"';
+          return block + ' ' + CLOSE;
+        },
+
+        toPreview: function (data) {
+          var id = extractId(data && data.url);
+          if (!id) {
+            return '<p style="color:#888">Paste a YouTube URL to preview it.</p>';
+          }
+          return (
+            '<img src="https://img.youtube.com/vi/' + id + '/hqdefault.jpg"' +
+            ' alt="YouTube thumbnail"' +
+            ' style="max-width:100%;border-radius:8px;display:block" />'
+          );
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

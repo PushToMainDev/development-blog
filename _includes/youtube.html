@@ -1,0 +1,25 @@
+{%- comment -%}
+  Responsive YouTube embed.
+
+  Usage in a post or product body:
+    {% include youtube.html id="dQw4w9WgXcQ" %}
+    {% include youtube.html id="dQw4w9WgXcQ" title="Kin Kitchen sprint 1 demo" %}
+
+  Pass only the video ID, not the full URL. The Write UI's "YouTube Video"
+  button accepts a full URL and fills this in for you.
+{%- endcomment -%}
+
+{%- assign yt_id = include.id | strip -%}
+{%- assign yt_title = include.title | default: "YouTube video" -%}
+
+{%- if yt_id != "" -%}
+<div class="video-embed">
+  <iframe
+    src="https://www.youtube-nocookie.com/embed/{{ yt_id | uri_escape }}"
+    title="{{ yt_title | escape }}"
+    loading="lazy"
+    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    allowfullscreen></iframe>
+</div>
+{%- endif -%}

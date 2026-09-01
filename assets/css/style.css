@@ -561,6 +561,48 @@ nav a:hover { color: var(--text); }
 }
 
 
+/* Video embeds */
+
+.video-embed {
+  position: relative;
+
+  width: 100%;
+  max-width: 900px;
+
+  margin: 32px auto;
+
+  aspect-ratio: 16 / 9;
+
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+
+  overflow: hidden;
+}
+
+/* Fallback for browsers without aspect-ratio support */
+@supports not (aspect-ratio: 16 / 9) {
+
+  .video-embed {
+    height: 0;
+    padding-bottom: 56.25%;
+  }
+}
+
+.video-embed iframe {
+  position: absolute;
+  inset: 0;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0;
+}
+
+
 /* Project pages on mobile */
 
 @media (max-width: 760px) {
