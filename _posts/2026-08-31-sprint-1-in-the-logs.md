@@ -11,7 +11,7 @@ tags:
   - SwitfUI
   - Supabase
   - Development
-image: /assets/uploads/profile.png
+image: /development-blog/assets/uploads/sprint-1-banner-2.png
 ---
 ## From an Idea to an Actual App
 
@@ -183,3 +183,5 @@ The recipe designs include recipe browsing, recipe details, adding recipes, ingr
 ### Gatherings
 
 The gathering designs cover creating gatherings, viewing gathering details, adding dishes, managing guests, guest information, chat, attendance, and tracking which dishes still need someone to bring them.
+
+![](/development-blog/assets/uploads/sprint-1-banner.png)
