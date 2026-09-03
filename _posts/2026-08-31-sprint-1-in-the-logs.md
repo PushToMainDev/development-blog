@@ -11,7 +11,7 @@ tags:
   - SwitfUI
   - Supabase
   - Development
-image: /development-blog/assets/uploads/sprint-1-banner-2.png
+image: /development-blog/assets/uploads/sprint-1-banner.png
 ---
 ## From an Idea to an Actual App
 
