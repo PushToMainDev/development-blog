@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Sprint 1 in the logs!
+title: "Kin Kitchen: Sprint 1 in the logs!"
 product: kin-kitchen
 author: Greg Hudler
 date: 2026-08-30T23:07:00.000-04:00
