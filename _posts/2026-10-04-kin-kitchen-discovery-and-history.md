@@ -111,6 +111,8 @@ The Recipes screen also tells the user how many recipes remain:
 
 > Showing 6 of 24 recipes
 
+![](/development-blog/assets/uploads/filtered-results-.png)
+
 If nothing matches, the app suggests removing a filter rather than simply presenting an unexplained empty screen.
 
 Recipe cards can also compare themselves against the user's own Dietary Profile and display warnings when a potential conflict is detected.
