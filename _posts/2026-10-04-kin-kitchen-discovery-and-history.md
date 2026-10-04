@@ -8,7 +8,7 @@ description: Advanced filtering that suits every need, logical archiving to keep
   the past steady.
 image: /development-blog/assets/uploads/sp5banner.png
 ---
-# Sprint 5: Discovery and History
+## Sprint 5: Discovery and History
 
 Sprint 5 was focused on making Kin Kitchen better at two things: **finding information when you need it and remembering what happened after a gathering is over.**
 
