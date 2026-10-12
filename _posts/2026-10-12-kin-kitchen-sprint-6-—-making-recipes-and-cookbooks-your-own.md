@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Kin Kitchen: Sprint 6 — Making Recipes and Cookbooks Your Own"
+title: "Kin Kitchen: Making Recipes and Cookbooks Your Own"
 product: kin-kitchen
 author: Greg Hudler
 date: 2026-10-11T21:21:00.000-04:00
