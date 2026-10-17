@@ -12,17 +12,6 @@
   const STATUS_LABELS = Object.fromEntries(STATUSES.map((s) => [s.id, s.label]));
   const FILTER_STORAGE_KEY = "board-filters";
 
-  // Decorative session typed out on the sign-in screen.
-  const TERMINAL_LINES = [
-    "$ board status --sprint current",
-    "  ▸ KK-12  Recipe import       in progress   8 pts",
-    "  ▸ KK-14  Allergen filters    blocked       5 pts",
-    "  ✓ KK-9   Cookbook sharing    done         13 pts",
-    "$ git push origin main",
-    "  ✓ shipped. 21 of 26 pts done this sprint",
-    "$ board login",
-  ];
-
   const projects = config.projects || [];
   const projectsById = new Map(projects.map((p) => [p.id, p]));
 
@@ -53,7 +42,6 @@
     boardError: $("#board-error"),
     columns: $("#board-columns"),
     stats: $("#board-stats"),
-    terminal: $("#dev-terminal"),
     newTicket: $("#board-new"),
     openPeople: $("#board-people"),
 
@@ -260,53 +248,6 @@
     const ok = await run(db.from("tickets").update(patch).eq("id", ticket.id), errorTarget);
     await load();
     return Boolean(ok);
-  }
-
-
-  /* Sign-in terminal */
-
-  let terminalStarted = false;
-
-  function terminalLine(text) {
-    let tone = "";
-    if (text.startsWith("$")) tone = "is-cmd";
-    else if (text.includes("blocked")) tone = "is-bad";
-    else if (text.trim().startsWith("✓")) tone = "is-ok";
-    return el("span", { class: tone }, text + "\n");
-  }
-
-  // Commands type out a character at a time; their output appears a line at a time.
-  function startTerminal() {
-    if (!ui.terminal || terminalStarted) return;
-    terminalStarted = true;
-
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      ui.terminal.replaceChildren(...TERMINAL_LINES.map(terminalLine));
-      return;
-    }
-
-    const shown = [];
-    let line = 0;
-    let char = 0;
-
-    (function tick() {
-      if (line >= TERMINAL_LINES.length) return;
-      const text = TERMINAL_LINES[line];
-
-      if (text.startsWith("$") && char < text.length) {
-        char += 1;
-        ui.terminal.replaceChildren(...shown, el("span", { class: "is-cmd" }, text.slice(0, char)));
-        setTimeout(tick, 40 + Math.random() * 50);
-        return;
-      }
-
-      shown.push(terminalLine(text));
-      ui.terminal.replaceChildren(...shown);
-      line += 1;
-      char = 0;
-      setTimeout(tick, text.startsWith("$") ? 420 : 160);
-    })();
   }
 
 
@@ -775,8 +716,6 @@
     ui.app.hidden = !signedIn;
     ui.session.hidden = !signedIn;
     ui.sessionEmail.textContent = session?.user?.email || "";
-
-    if (!signedIn) startTerminal();
 
     if (signedIn === state.signedIn) return;
     state.signedIn = signedIn;

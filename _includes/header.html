@@ -3,7 +3,11 @@
     <a class="brand" href="{{ '/' | relative_url }}">
       <span class="prompt">&gt;_</span> PushToMainDev Blog
     </a>
-    <nav aria-label="Main navigation">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+      <span class="sr-only">Menu</span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="Main navigation">
       <a href="{{ '/' | relative_url }}">Home</a>
       <a href="{{ '/blog/' | relative_url }}">Blog</a>
       <details class="nav-dropdown">
@@ -26,15 +30,34 @@
   </div>
   <script>
     (function () {
-      var dropdown = document.querySelector('.nav-dropdown');
-      if (!dropdown) return;
-      document.addEventListener('click', function (e) {
-        if (dropdown.open && !dropdown.contains(e.target)) dropdown.open = false;
+      var header = document.querySelector('.site-header');
+      var toggle = header.querySelector('.nav-toggle');
+      var dropdown = header.querySelector('.nav-dropdown');
+
+      function setMenu(open) {
+        header.classList.toggle('is-menu-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+      }
+
+      toggle.addEventListener('click', function () {
+        setMenu(!header.classList.contains('is-menu-open'));
       });
+
+      document.addEventListener('click', function (e) {
+        if (dropdown && dropdown.open && !dropdown.contains(e.target) && !header.classList.contains('is-menu-open')) {
+          dropdown.open = false;
+        }
+        if (header.classList.contains('is-menu-open') && !header.contains(e.target)) setMenu(false);
+      });
+
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && dropdown.open) {
+        if (e.key !== 'Escape') return;
+        if (dropdown && dropdown.open) {
           dropdown.open = false;
           dropdown.querySelector('summary').focus();
+        } else if (header.classList.contains('is-menu-open')) {
+          setMenu(false);
+          toggle.focus();
         }
       });
     })();

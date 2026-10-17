@@ -4,6 +4,40 @@ title: Development
 permalink: /development/
 ---
 
+<section class="hero dev-hero" id="board-auth" hidden>
+  <div class="shell">
+    <p class="eyebrow">&gt;_ development</p>
+
+    <h1 class="hero-title">
+      Plan. Build. Track.<br>
+      <span>&gt;_ Sign In.</span>
+    </h1>
+
+    <p class="hero-copy">
+      The PushToMain project board. Tickets, subtasks, and story points for
+      every product we're building, from first concept to release.
+    </p>
+
+    <form class="dev-login" id="board-login">
+      <label class="board-field">
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="username" placeholder="you@pushtomain.dev" required>
+      </label>
+
+      <label class="board-field">
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" placeholder="••••••••" required>
+      </label>
+
+      <button type="submit" class="button primary">Sign In →</button>
+    </form>
+
+    <p class="board-error dev-login-error" id="login-error" role="alert" hidden></p>
+    <p class="dev-login-note">Team members only.</p>
+  </div>
+</section>
+
+
 <section class="shell board-page">
 
   <div class="setup-note" id="board-setup" hidden>
@@ -12,44 +46,7 @@ permalink: /development/
     <code>_supabase/board.sql</code> in Supabase. See the README for the full steps.
   </div>
 
-  <div class="board-auth" id="board-auth" hidden>
-    <div class="dev-auth-intro">
-      <p class="eyebrow">&gt;_ development hq</p>
-      <h1 class="dev-auth-title">Plan it.<br>Build it.<br><span>Push to main.</span></h1>
-      <p class="dev-auth-copy">
-        Tickets, subtasks and story points for everything PushToMainDev is building.
-      </p>
-
-      <div class="dev-terminal" aria-hidden="true">
-        <div class="dev-terminal-bar">
-          <span></span><span></span><span></span>
-          <em>~/pushtomain/board</em>
-        </div>
-        <pre class="dev-terminal-body" id="dev-terminal"></pre>
-      </div>
-    </div>
-
-    <form class="board-login" id="board-login">
-      <p class="section-label">&gt;_ development</p>
-      <h2>Sign in</h2>
-      <p class="board-hint">Project boards and tickets are for the team only.</p>
-
-      <label class="board-field">
-        <span>Email</span>
-        <input type="email" name="email" autocomplete="username" required>
-      </label>
-
-      <label class="board-field">
-        <span>Password</span>
-        <input type="password" name="password" autocomplete="current-password" required>
-      </label>
-
-      <button type="submit" class="board-button is-primary">Sign in</button>
-      <p class="board-error" id="login-error" role="alert" hidden></p>
-    </form>
-  </div>
-
-  <div id="board-app" hidden>
+  <div class="board-app" id="board-app" hidden>
     <div class="board-hero">
       <div>
         <p class="eyebrow">&gt;_ project board</p>
