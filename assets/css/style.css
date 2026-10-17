@@ -699,6 +699,7 @@ nav a:hover { color: var(--text); }
 }
 
 .board-page [hidden],
+.board-auth[hidden],
 .board-dialog [hidden],
 .dev-header [hidden] {
   display: none !important;
