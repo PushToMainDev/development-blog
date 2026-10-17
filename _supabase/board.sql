@@ -31,6 +31,15 @@ create table if not exists public.ticket_members (
 );
 
 
+-- Private projects. These live only here, never in the public repo, so the
+-- blog and page source don't reveal them. Public projects come from _products.
+create table if not exists public.board_projects (
+  id text primary key check (id ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+  title text not null check (length(trim(title)) > 0),
+  created_at timestamptz not null default now()
+);
+
+
 -- Tasks and subtasks. A subtask is a ticket with a parent_id.
 create table if not exists public.tickets (
   id bigint generated always as identity primary key,
@@ -103,11 +112,18 @@ create trigger tickets_sync_children
 
 
 -- Row level security: only allow-listed, signed-in users can see or change anything.
+alter table public.board_projects enable row level security;
 alter table public.ticket_members enable row level security;
 alter table public.tickets enable row level security;
 
 drop policy if exists "board users manage members" on public.ticket_members;
 create policy "board users manage members" on public.ticket_members
+  for all to authenticated
+  using (public.is_board_user())
+  with check (public.is_board_user());
+
+drop policy if exists "board users manage private projects" on public.board_projects;
+create policy "board users manage private projects" on public.board_projects
   for all to authenticated
   using (public.is_board_user())
   with check (public.is_board_user());

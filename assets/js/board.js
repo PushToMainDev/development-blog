@@ -12,12 +12,13 @@
   const STATUS_LABELS = Object.fromEntries(STATUSES.map((s) => [s.id, s.label]));
   const FILTER_STORAGE_KEY = "board-filters";
 
-  const projects = config.projects || [];
-  const projectsById = new Map(projects.map((p) => [p.id, p]));
+  // Public projects come from _products at build time; private ones live only in Supabase.
+  const publicProjects = (config.projects || []).map((p) => ({ ...p, isPrivate: false }));
 
   const state = {
     tickets: [],
     members: [],
+    privateProjects: [],
     filters: readFilters(),
     signedIn: false,
     // The ticket open in the dialog: its id (null for a new one) and its parent's id.
@@ -66,6 +67,12 @@
     peopleList: $("#people-list"),
     peopleForm: $("#people-form"),
     peopleError: $("#people-error"),
+
+    openProjects: $("#board-projects"),
+    projectsDialog: $("#projects-dialog"),
+    projectsList: $("#projects-list"),
+    projectsForm: $("#projects-form"),
+    projectsError: $("#projects-error"),
   };
 
   if (!config.supabaseUrl || !config.supabaseAnonKey || !window.supabase) {
@@ -145,8 +152,33 @@
     return state.tickets.filter((t) => t.parent_id === ticket.id);
   }
 
+  function allProjects() {
+    return [...publicProjects, ...state.privateProjects];
+  }
+
+  function findProject(id) {
+    return allProjects().find((p) => p.id === id) || null;
+  }
+
   function projectTitle(id) {
-    return projectsById.get(id)?.title || id;
+    const project = findProject(id);
+    if (!project) return id;
+    return project.isPrivate ? `🔒 ${project.title}` : project.title;
+  }
+
+  // Options for a project <select>, grouped once there are private projects.
+  function projectChoices(selected) {
+    const toOption = (p) => option(p.id, projectTitle(p.id), p.id === selected);
+    if (!state.privateProjects.length) return publicProjects.map(toOption);
+
+    return [
+      el("optgroup", { label: "Public" }, publicProjects.map(toOption)),
+      el("optgroup", { label: "Private" }, state.privateProjects.map(toOption)),
+    ];
+  }
+
+  function slugify(text) {
+    return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
   }
 
   function projectPrefix(id) {
@@ -197,7 +229,7 @@
 
   function defaultProject() {
     if (state.filters.project !== "all") return state.filters.project;
-    return projects[0]?.id || "general";
+    return allProjects()[0]?.id || "general";
   }
 
   function plural(n, word) {
@@ -208,9 +240,10 @@
   /* Data */
 
   async function load() {
-    const [tickets, members] = await Promise.all([
+    const [tickets, members, privateProjects] = await Promise.all([
       db.from("tickets").select("*").order("id"),
       db.from("ticket_members").select("*").order("name"),
+      db.from("board_projects").select("*").order("title"),
     ]);
 
     const error = tickets.error || members.error;
@@ -219,6 +252,11 @@
 
     state.tickets = tickets.data;
     state.members = members.data;
+    // A missing board_projects table only disables private projects; the rest of the board still works.
+    state.privateProjects = (privateProjects.data || []).map((p) => ({ ...p, isPrivate: true }));
+    if (privateProjects.error) {
+      showError(ui.boardError, { message: `Private projects unavailable: ${privateProjects.error.message}. Run _supabase/board.sql again to add them.` });
+    }
     render();
   }
 
@@ -264,12 +302,12 @@
   }
 
   function renderFilters() {
-    const knownProject = state.filters.project === "all" || projectsById.has(state.filters.project);
+    const knownProject = state.filters.project === "all" || findProject(state.filters.project);
     if (!knownProject) state.filters.project = "all";
 
     ui.filterProject.replaceChildren(
       option("all", "All projects", state.filters.project === "all"),
-      ...projects.map((p) => option(p.id, p.title, state.filters.project === p.id))
+      ...projectChoices(state.filters.project)
     );
 
     const knownAssignee = ["all", "none"].includes(state.filters.assignee)
@@ -397,6 +435,7 @@
 
     if (ui.ticketDialog.open) renderSubtasks();
     if (ui.peopleDialog.open) renderPeople();
+    if (ui.projectsDialog.open) renderProjects();
   }
 
 
@@ -442,9 +481,10 @@
     ui.parentLink.hidden = !parent;
     if (parent) ui.parentLink.textContent = `← Subtask of ${ticketKey(parent)}: ${parent.title}`;
 
-    const projectOptions = projects.map((p) => [p.id, p.title]);
-    if (!projectsById.has(draft.project)) projectOptions.push([draft.project, draft.project]);
-    fillSelect(form.elements.project, projectOptions, draft.project);
+    form.elements.project.replaceChildren(
+      ...projectChoices(draft.project),
+      findProject(draft.project) ? null : option(draft.project, draft.project, true)
+    );
     form.elements.project.disabled = Boolean(parent);
 
     fillSelect(form.elements.status, STATUSES.map((s) => [s.id, s.label]), draft.status);
@@ -708,6 +748,64 @@
   }
 
 
+  /* Private projects dialog */
+
+  function renderProjects() {
+    const ticketCount = (id) => state.tickets.filter((t) => t.project === id).length;
+
+    ui.projectsList.replaceChildren(
+      ...(state.privateProjects.length
+        ? state.privateProjects.map((p) => {
+            const count = ticketCount(p.id);
+            return el("li", { class: "people-row" },
+              el("span", { class: "avatar" }, "🔒"),
+              el("span", { class: "people-name" }, p.title, el("small", { class: "project-key" }, `${projectPrefix(p.id)}-`)),
+              el("span", { class: "people-count" }, plural(count, "ticket")),
+              el("button", { type: "button", class: "board-button is-link is-danger", onclick: () => removeProject(p, count) }, "Remove")
+            );
+          })
+        : [el("li", { class: "board-hint" }, "No private projects yet.")])
+    );
+  }
+
+  async function addProject(e) {
+    e.preventDefault();
+    const input = ui.projectsForm.elements.title;
+    const title = input.value.trim();
+    const id = slugify(title);
+    if (!title) return;
+
+    if (!id) {
+      showError(ui.projectsError, "Use at least one letter or number in the name.");
+      return;
+    }
+    if (findProject(id)) {
+      showError(ui.projectsError, `A project with the ID "${id}" already exists. Pick a different name.`);
+      return;
+    }
+
+    if (!(await run(db.from("board_projects").insert({ id, title }), ui.projectsError))) return;
+    input.value = "";
+    await load();
+    input.focus();
+  }
+
+  async function removeProject(project, count) {
+    if (count) {
+      showError(ui.projectsError, `${project.title} still has ${plural(count, "ticket")}. Move or delete them first.`);
+      return;
+    }
+    if (!window.confirm(`Remove the private project ${project.title}?`)) return;
+
+    if (!(await run(db.from("board_projects").delete().eq("id", project.id), ui.projectsError))) return;
+    if (state.filters.project === project.id) {
+      state.filters.project = "all";
+      saveFilters();
+    }
+    await load();
+  }
+
+
   /* Auth */
 
   function setSignedIn(session) {
@@ -725,9 +823,11 @@
     } else {
       state.tickets = [];
       state.members = [];
+      state.privateProjects = [];
       ui.columns.replaceChildren();
       if (ui.ticketDialog.open) ui.ticketDialog.close();
       if (ui.peopleDialog.open) ui.peopleDialog.close();
+      if (ui.projectsDialog.open) ui.projectsDialog.close();
     }
   }
 
@@ -804,6 +904,17 @@
     if (e.target === ui.ticketDialog || e.target.closest("[data-close]")) closeTicketDialog();
   });
 
+  ui.openProjects.addEventListener("click", () => {
+    showError(ui.projectsError, null);
+    renderProjects();
+    ui.projectsDialog.showModal();
+    ui.projectsForm.elements.title.focus();
+  });
+  ui.projectsForm.addEventListener("submit", addProject);
+  ui.projectsDialog.addEventListener("click", (e) => {
+    if (e.target === ui.projectsDialog || e.target.closest("[data-close]")) ui.projectsDialog.close();
+  });
+
   ui.peopleForm.addEventListener("submit", addPerson);
   ui.peopleDialog.addEventListener("click", (e) => {
     if (e.target === ui.peopleDialog || e.target.closest("[data-close]")) ui.peopleDialog.close();
@@ -811,7 +922,8 @@
 
   // Pick up changes made on another device when coming back to the tab.
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && state.signedIn && !ui.ticketDialog.open && !ui.peopleDialog.open) load();
+    const dialogOpen = ui.ticketDialog.open || ui.peopleDialog.open || ui.projectsDialog.open;
+    if (!document.hidden && state.signedIn && !dialogOpen) load();
   });
 
   db.auth.onAuthStateChange((_event, session) => {

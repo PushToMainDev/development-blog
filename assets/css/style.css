@@ -1446,6 +1446,12 @@ nav a:hover { color: var(--text); }
   overflow-wrap: anywhere;
 }
 
+.project-key {
+  margin-left: 8px;
+  color: var(--muted);
+  font: 700 .72rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 .people-count {
   color: var(--muted);
   font-size: .8rem;

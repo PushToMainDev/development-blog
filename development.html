@@ -70,6 +70,7 @@ permalink: /development/
       </div>
 
       <div class="board-actions">
+        <button type="button" class="board-button" id="board-projects">🔒 Projects</button>
         <button type="button" class="board-button" id="board-people">People</button>
         <button type="button" class="board-button is-primary" id="board-new">+ New ticket</button>
       </div>
@@ -179,6 +180,33 @@ permalink: /development/
     </form>
 
     <p class="board-error" id="people-error" role="alert" hidden></p>
+  </div>
+</dialog>
+
+
+<dialog class="board-dialog is-small" id="projects-dialog" aria-labelledby="projects-dialog-title">
+  <div class="people-body">
+    <header class="board-dialog-head">
+      <div>
+        <p class="section-label">&gt;_ private</p>
+        <h2 id="projects-dialog-title">Private projects</h2>
+      </div>
+      <button type="button" class="board-icon-button" data-close aria-label="Close">&times;</button>
+    </header>
+
+    <p class="board-hint">
+      These exist only in the board's database. They never appear on the blog, in the
+      site's source, or in the GitHub repo. Public projects come from Products in the CMS.
+    </p>
+
+    <ul class="people-list" id="projects-list"></ul>
+
+    <form class="people-add" id="projects-form">
+      <input name="title" placeholder="Project name" maxlength="80" required aria-label="Project name">
+      <button type="submit" class="board-button is-primary">Add</button>
+    </form>
+
+    <p class="board-error" id="projects-error" role="alert" hidden></p>
   </div>
 </dialog>
 
