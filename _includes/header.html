@@ -6,9 +6,37 @@
     <nav aria-label="Main navigation">
       <a href="{{ '/' | relative_url }}">Home</a>
       <a href="{{ '/blog/' | relative_url }}">Blog</a>
+      <details class="nav-dropdown">
+        <summary>Projects</summary>
+        <div class="nav-dropdown-menu">
+          {% assign nav_products = site.products | sort: "order" %}
+          {% for product in nav_products %}
+            <a href="{{ product.url | relative_url }}"{% if page.url == product.url %} aria-current="page"{% endif %}>
+              {{ product.title }}
+              {% if product.status %}<span class="nav-dropdown-status">{{ product.status }}</span>{% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </details>
       <a href="{{ '/open-source/' | relative_url }}">Open Source</a>
       <a href="{{ '/about/' | relative_url }}">About</a>
+      <a href="{{ '/development/' | relative_url }}">Development</a>
       <a class="admin-link" href="{{ '/admin/' | relative_url }}">Write</a>
     </nav>
   </div>
+  <script>
+    (function () {
+      var dropdown = document.querySelector('.nav-dropdown');
+      if (!dropdown) return;
+      document.addEventListener('click', function (e) {
+        if (dropdown.open && !dropdown.contains(e.target)) dropdown.open = false;
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && dropdown.open) {
+          dropdown.open = false;
+          dropdown.querySelector('summary').focus();
+        }
+      });
+    })();
+  </script>
 </header>

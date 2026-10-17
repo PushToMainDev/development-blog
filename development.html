@@ -1,0 +1,184 @@
+---
+layout: development
+title: Development
+permalink: /development/
+---
+
+<section class="shell board-page">
+
+  <div class="setup-note" id="board-setup" hidden>
+    The board isn't connected yet. Add <code>board.supabase_url</code> and
+    <code>board.supabase_anon_key</code> to <code>_config.yml</code> and run
+    <code>_supabase/board.sql</code> in Supabase. See the README for the full steps.
+  </div>
+
+  <div class="board-auth" id="board-auth" hidden>
+    <form class="board-login" id="board-login">
+      <p class="section-label">&gt;_ development</p>
+      <h2>Sign in</h2>
+      <p class="board-hint">Project boards and tickets are for the team only.</p>
+
+      <label class="board-field">
+        <span>Email</span>
+        <input type="email" name="email" autocomplete="username" required>
+      </label>
+
+      <label class="board-field">
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+
+      <button type="submit" class="board-button is-primary">Sign in</button>
+      <p class="board-error" id="login-error" role="alert" hidden></p>
+    </form>
+  </div>
+
+  <div id="board-app" hidden>
+    <div class="board-hero">
+      <div>
+        <p class="eyebrow">&gt;_ project board</p>
+        <h1>Board</h1>
+      </div>
+    </div>
+
+    <div class="board-toolbar">
+      <div class="board-filters">
+        <label class="board-select">
+          <span class="sr-only">Project</span>
+          <select id="board-filter-project"></select>
+        </label>
+
+        <label class="board-select">
+          <span class="sr-only">Assignee</span>
+          <select id="board-filter-assignee"></select>
+        </label>
+      </div>
+
+      <div class="board-actions">
+        <button type="button" class="board-button" id="board-people">People</button>
+        <button type="button" class="board-button is-primary" id="board-new">+ New ticket</button>
+      </div>
+    </div>
+
+    <p class="board-error" id="board-error" role="alert" hidden></p>
+
+    <div class="board-columns" id="board-columns"></div>
+  </div>
+
+</section>
+
+
+<dialog class="board-dialog" id="ticket-dialog" aria-labelledby="ticket-dialog-key">
+  <form class="ticket-form" id="ticket-form" novalidate>
+    <header class="board-dialog-head">
+      <div>
+        <p class="section-label" id="ticket-dialog-key">New ticket</p>
+        <button type="button" class="ticket-parent-link" id="ticket-parent-link" hidden></button>
+      </div>
+      <button type="button" class="board-icon-button" data-close aria-label="Close">&times;</button>
+    </header>
+
+    <label class="board-field">
+      <span>Title</span>
+      <input class="ticket-title-input" name="title" maxlength="200" required>
+    </label>
+
+    <div class="board-field-grid">
+      <label class="board-field">
+        <span>Project</span>
+        <select name="project"></select>
+      </label>
+
+      <label class="board-field">
+        <span>Status</span>
+        <select name="status"></select>
+      </label>
+
+      <label class="board-field">
+        <span>Assignee</span>
+        <select name="assignee_id"></select>
+      </label>
+
+      <label class="board-field">
+        <span>Story points</span>
+        <input type="number" name="story_points" min="0" step="0.5" inputmode="decimal">
+      </label>
+    </div>
+
+    <label class="board-field" id="ticket-blocked-field" hidden>
+      <span>What's blocking it?</span>
+      <textarea name="blocked_reason" rows="2"></textarea>
+    </label>
+
+    <label class="board-field">
+      <span>Description</span>
+      <textarea name="description" rows="6"></textarea>
+    </label>
+
+    <section class="ticket-subtasks" id="ticket-subtasks" hidden>
+      <div class="ticket-subtasks-head">
+        <h3>Subtasks</h3>
+        <span id="ticket-subtasks-summary"></span>
+      </div>
+
+      <p class="ticket-points-rollup" id="ticket-points-rollup"></p>
+
+      <p class="board-hint" id="ticket-subtasks-hint" hidden>Save the ticket first, then add subtasks.</p>
+
+      <ul class="subtask-list" id="subtask-list"></ul>
+
+      <div class="subtask-add" id="subtask-add">
+        <input id="subtask-new-title" placeholder="Add a subtask…" maxlength="200" aria-label="New subtask title">
+        <input id="subtask-new-points" type="number" min="0" step="0.5" inputmode="decimal" placeholder="pts" aria-label="New subtask story points">
+        <button type="button" class="board-button" id="subtask-add-button">Add</button>
+      </div>
+    </section>
+
+    <p class="board-error" id="ticket-error" role="alert" hidden></p>
+
+    <footer class="board-dialog-foot">
+      <button type="button" class="board-button is-danger" id="ticket-delete">Delete</button>
+      <span class="spacer"></span>
+      <button type="button" class="board-button" data-close>Cancel</button>
+      <button type="submit" class="board-button is-primary">Save</button>
+    </footer>
+  </form>
+</dialog>
+
+
+<dialog class="board-dialog is-small" id="people-dialog" aria-labelledby="people-dialog-title">
+  <div class="people-body">
+    <header class="board-dialog-head">
+      <div>
+        <p class="section-label">&gt;_ team</p>
+        <h2 id="people-dialog-title">People</h2>
+      </div>
+      <button type="button" class="board-icon-button" data-close aria-label="Close">&times;</button>
+    </header>
+
+    <ul class="people-list" id="people-list"></ul>
+
+    <form class="people-add" id="people-form">
+      <input name="name" placeholder="Name" maxlength="80" required aria-label="Name">
+      <button type="submit" class="board-button is-primary">Add</button>
+    </form>
+
+    <p class="board-error" id="people-error" role="alert" hidden></p>
+  </div>
+</dialog>
+
+
+{% assign board_products = site.products | sort: "order" %}
+<script>
+  window.BOARD_CONFIG = {
+    supabaseUrl: {{ site.board.supabase_url | jsonify }},
+    supabaseAnonKey: {{ site.board.supabase_anon_key | jsonify }},
+    projects: [
+      {% for product in board_products %}
+        { "id": {{ product.product_id | jsonify }}, "title": {{ product.title | jsonify }} }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="{{ '/assets/js/board.js' | relative_url }}"></script>

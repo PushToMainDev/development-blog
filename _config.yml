@@ -18,3 +18,9 @@ collections:
   products:
     output: true
     permalink: /products/:name/
+
+# Project board (/board/). The anon key is meant to be public; access is
+# limited by row level security to the emails in the board_users table.
+board:
+  supabase_url: "https://dgpqtwcxczwhefhlbnvd.supabase.co"
+  supabase_anon_key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRncHF0d2N4Y3p3aGVmaGxibnZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxOTk2NjQsImV4cCI6MjEwNzc3NTY2NH0.aGDBzQEP2X20qA82Iy7_YMhQTgOyNgXcUv1L2fOe_R8"

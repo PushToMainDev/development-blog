@@ -97,3 +97,35 @@ Log in with GitHub and create a Blog Post. The editor writes Markdown posts into
 
 A starter `2026-08-07-my-development-journey.md` is included. Replace its placeholder
 sections with your own introduction, journey, and goals before submitting the assignment.
+
+## Project board
+
+`/development/` is a private Jira-style board, separate from the blog (it has
+its own layout and opens on a sign-in screen). It's for tracking work on the projects in
+`_products`. Tickets have a title, description, project, assignee, status
+(To Do, In Progress, Blocked, Done) and story points. A task can have
+subtasks, and its total points are its own points plus all of its subtasks'
+points. Data is stored in Supabase.
+
+### Setup
+
+1. Create a Supabase project (or reuse one).
+2. Supabase -> SQL Editor: run `_supabase/board.sql`.
+3. Authentication -> Users -> Add user: create your login with an email and password.
+   You can also turn off "Allow new users to sign up" under Authentication -> Sign In / Providers.
+4. SQL Editor: allow that login to use the board (lowercase email):
+
+   insert into public.board_users (email) values ('you@example.com');
+
+5. Project Settings -> API: copy the Project URL and the `anon` public key into
+   `_config.yml`:
+
+   board:
+     supabase_url: "https://YOUR-PROJECT.supabase.co"
+     supabase_anon_key: "YOUR-ANON-KEY"
+
+6. Commit, push, and open https://pushtomaindev.github.io/development-blog/development/
+
+People you assign tickets to are managed from the People button and don't
+need their own logins. To give someone else edit access, create a user for them
+and add their email to `board_users`.
