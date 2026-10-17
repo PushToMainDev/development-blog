@@ -1414,6 +1414,134 @@ nav a:hover { color: var(--text); }
 }
 
 
+/* Markdown import */
+
+.import-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.import-actions label.board-button {
+  position: relative;
+}
+
+.import-actions label.board-button:focus-within {
+  border-color: var(--accent);
+}
+
+.board-field .import-text {
+  min-height: 180px;
+  font: .82rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.import-preview:empty {
+  display: none;
+}
+
+.import-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.import-summary {
+  margin: 0;
+  color: var(--accent);
+  font: 700 .8rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.import-messages {
+  margin: 0;
+  padding: 10px 12px 10px 30px;
+
+  color: var(--muted);
+
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+
+  font-size: .86rem;
+}
+
+.import-messages.is-error {
+  background: rgba(248, 113, 113, .08);
+  color: #fecaca;
+  border: 1px solid rgba(248, 113, 113, .4);
+}
+
+.import-list,
+.import-subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.import-task {
+  padding: 12px 14px;
+
+  background: var(--bg);
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.import-row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.import-row strong,
+.import-row > span:nth-child(2) {
+  overflow-wrap: anywhere;
+}
+
+.import-row small {
+  color: var(--muted);
+}
+
+.import-meta {
+  margin: 4px 0 0 106px;
+  color: var(--muted);
+  font-size: .8rem;
+}
+
+.import-subtasks {
+  margin: 10px 0 0 24px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  font-size: .9rem;
+}
+
+.import-status {
+  justify-self: start;
+  padding: 2px 8px;
+
+  color: var(--muted);
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  font: 700 .66rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+
+.import-status.is-in-progress { color: var(--accent); border-color: rgba(103, 232, 249, .4); }
+.import-status.is-blocked { color: var(--danger); border-color: rgba(248, 113, 113, .45); }
+.import-status.is-done { color: var(--accent2); border-color: rgba(167, 243, 208, .4); }
+
+
 /* Board sign-in and people */
 
 .board-auth {
@@ -1554,6 +1682,18 @@ nav a:hover { color: var(--text); }
 
   .subtask-row .board-mini-select {
     grid-column: 1 / -1;
+  }
+
+  .import-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .import-row .import-status {
+    grid-column: 1 / -1;
+  }
+
+  .import-meta {
+    margin-left: 0;
   }
 }
 

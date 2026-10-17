@@ -76,6 +76,7 @@ permalink: /development/
       </div>
 
       <div class="board-actions">
+        <button type="button" class="board-button" id="board-import">Import .md</button>
         <button type="button" class="board-button" id="board-projects">🔒 Projects</button>
         <button type="button" class="board-button" id="board-people">People</button>
         <button type="button" class="board-button is-primary" id="board-new">+ New ticket</button>
@@ -213,6 +214,54 @@ permalink: /development/
     </form>
 
     <p class="board-error" id="projects-error" role="alert" hidden></p>
+  </div>
+</dialog>
+
+
+<dialog class="board-dialog" id="import-dialog" aria-labelledby="import-dialog-title">
+  <div class="ticket-form">
+    <header class="board-dialog-head">
+      <div>
+        <p class="section-label">&gt;_ import</p>
+        <h2 id="import-dialog-title">Import tickets from Markdown</h2>
+      </div>
+      <button type="button" class="board-icon-button" data-close aria-label="Close">&times;</button>
+    </header>
+
+    <p class="board-hint">
+      Copy the AI prompt into Claude or ChatGPT, describe the work, and save its answer as a
+      <code>.md</code> file. Then load the file here or paste the Markdown below.
+    </p>
+
+    <div class="import-actions">
+      <button type="button" class="board-button" id="import-copy-prompt">Copy AI prompt</button>
+      <label class="board-button">
+        Choose .md file
+        <input type="file" class="sr-only" id="import-file" accept=".md,.markdown,.txt,text/markdown,text/plain">
+      </label>
+      <span class="board-hint" id="import-copy-status" role="status"></span>
+    </div>
+
+    <label class="board-field">
+      <span>Markdown</span>
+      <textarea class="import-text" id="import-text" rows="10" spellcheck="false"
+        placeholder="# Project: kin-kitchen&#10;&#10;## Recipe import from URLs&#10;- Status: To Do&#10;- Points: 3&#10;- Assignee: Greg Hudler&#10;&#10;Pull recipes in from any recipe website.&#10;&#10;### Parse schema.org recipe data&#10;- Points: 2"></textarea>
+    </label>
+
+    <label class="board-field">
+      <span>Project for tickets without a "# Project:" line</span>
+      <select id="import-default-project"></select>
+    </label>
+
+    <div class="import-preview" id="import-preview"></div>
+
+    <p class="board-error" id="import-error" role="alert" hidden></p>
+
+    <footer class="board-dialog-foot">
+      <span class="spacer"></span>
+      <button type="button" class="board-button" data-close>Cancel</button>
+      <button type="button" class="board-button is-primary" id="import-create" disabled>Create tickets</button>
+    </footer>
   </div>
 </dialog>
 

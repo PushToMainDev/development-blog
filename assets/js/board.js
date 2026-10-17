@@ -85,6 +85,17 @@
     projectsList: $("#projects-list"),
     projectsForm: $("#projects-form"),
     projectsError: $("#projects-error"),
+
+    openImport: $("#board-import"),
+    importDialog: $("#import-dialog"),
+    importText: $("#import-text"),
+    importFile: $("#import-file"),
+    importDefaultProject: $("#import-default-project"),
+    importPreview: $("#import-preview"),
+    importError: $("#import-error"),
+    importCreate: $("#import-create"),
+    importCopyPrompt: $("#import-copy-prompt"),
+    importCopyStatus: $("#import-copy-status"),
   };
 
   if (!config.supabaseUrl || !config.supabaseAnonKey || !window.supabase) {
@@ -865,6 +876,405 @@
   }
 
 
+  /* Markdown import */
+
+  // Field names accepted under a "## Task" or "### Subtask" heading.
+  const IMPORT_FIELDS = {
+    "project": "project",
+    "status": "status",
+    "points": "story_points",
+    "story points": "story_points",
+    "estimate": "story_points",
+    "assignee": "assignee",
+    "assigned to": "assignee",
+    "owner": "assignee",
+    "blocked": "blocked_reason",
+    "blocked by": "blocked_reason",
+    "blocker": "blocked_reason",
+  };
+
+  const IMPORT_STATUSES = {
+    "todo": "todo",
+    "to do": "todo",
+    "backlog": "todo",
+    "open": "todo",
+    "in progress": "in_progress",
+    "inprogress": "in_progress",
+    "doing": "in_progress",
+    "blocked": "blocked",
+    "done": "done",
+    "complete": "done",
+    "completed": "done",
+    "closed": "done",
+  };
+
+  // Reads the board's Markdown format into tasks with their subtasks, without checking values.
+  function parseImport(text) {
+    const lines = text.split(/\r?\n/);
+    const tasks = [];
+    const errors = [];
+
+    // AI answers are often wrapped in a ```markdown fence; blank it out but keep line numbers.
+    const filled = lines.map((l, i) => [l.trim(), i]).filter(([l]) => l);
+    if (filled.length >= 2 && /^(```|~~~)/.test(filled[0][0]) && /^(```|~~~)\s*$/.test(filled[filled.length - 1][0])) {
+      lines[filled[0][1]] = "";
+      lines[filled[filled.length - 1][1]] = "";
+    }
+
+    let project = null;
+    let current = null;
+    let inFields = false;
+    let inCode = false;
+
+    lines.forEach((raw, index) => {
+      const lineNo = index + 1;
+
+      if (/^\s*(```|~~~)/.test(raw)) {
+        inCode = !inCode;
+        inFields = false;
+        if (current) current.lines.push(raw);
+        return;
+      }
+
+      const heading = inCode ? null : raw.match(/^(#{1,3})\s+(.*?)\s*#*\s*$/);
+      if (heading) {
+        const level = heading[1].length;
+        const text = heading[2].replace(/\*\*|__|`/g, "").trim();
+        inFields = false;
+
+        if (level === 1) {
+          const match = text.match(/^project\s*:\s*(.+)$/i);
+          if (match) project = { value: match[1].trim(), line: lineNo };
+          current = null;
+          return;
+        }
+
+        const title = text.replace(/^(task|story|ticket|sub-?task)\s*[:\-–—]\s*/i, "").trim();
+        if (!title) {
+          errors.push(`Line ${lineNo}: heading has no title.`);
+          current = null;
+          return;
+        }
+
+        const item = { title, line: lineNo, project, fields: {}, lines: [], subtasks: [] };
+        if (level === 2) {
+          tasks.push(item);
+        } else if (tasks.length) {
+          tasks[tasks.length - 1].subtasks.push(item);
+        } else {
+          errors.push(`Line ${lineNo}: subtask "${title}" has no "## " task above it.`);
+          current = null;
+          return;
+        }
+
+        current = item;
+        inFields = true;
+        return;
+      }
+
+      if (!current) return;
+
+      if (inFields) {
+        if (!raw.trim()) return;
+        const field = raw.replace(/\*\*|__/g, "").match(/^\s*[-*+]\s*([A-Za-z][A-Za-z -]*?)\s*:\s*(.*)$/);
+        const key = field && IMPORT_FIELDS[field[1].toLowerCase()];
+        if (key) {
+          current.fields[key] = { value: field[2].trim(), line: lineNo };
+          return;
+        }
+        inFields = false;
+      }
+
+      current.lines.push(raw);
+    });
+
+    return { tasks, errors };
+  }
+
+  function matchProject(ref) {
+    const wanted = ref.replace(/🔒/g, "").trim().toLowerCase();
+    return allProjects().find((p) =>
+      p.id === wanted || p.title.toLowerCase() === wanted || p.id === slugify(wanted)
+    ) || null;
+  }
+
+  // Checks the parsed tickets against the board's projects and people, ready to create.
+  function resolveImport(text, fallbackProject) {
+    const { tasks, errors } = parseImport(text);
+    const warnings = [];
+    const knownPeople = new Map(state.members.map((m) => [m.name.toLowerCase(), m.name]));
+    const newPeople = new Map();
+
+    function resolveItem(item) {
+      const f = item.fields;
+      const out = {
+        title: item.title.slice(0, 200),
+        description: item.lines.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+        status: "todo",
+        blocked_reason: "",
+        story_points: 0,
+        assignee: null,
+        subtasks: [],
+      };
+
+      if (item.title.length > 200) warnings.push(`Line ${item.line}: title shortened to 200 characters.`);
+
+      if (f.status) {
+        const key = f.status.value.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+        if (IMPORT_STATUSES[key]) out.status = IMPORT_STATUSES[key];
+        else errors.push(`Line ${f.status.line}: unknown status "${f.status.value}". Use To Do, In Progress, Blocked or Done.`);
+      }
+
+      if (f.story_points) {
+        const value = Number(f.story_points.value.replace(/\s*(pts?|points?)\.?$/i, ""));
+        if (Number.isFinite(value) && value >= 0) out.story_points = Math.round(value * 10) / 10;
+        else errors.push(`Line ${f.story_points.line}: points must be a number of 0 or more, not "${f.story_points.value}".`);
+      }
+
+      if (f.assignee) {
+        const name = f.assignee.value.replace(/^@/, "").trim();
+        if (name && !/^(none|unassigned|n\/a|-)$/i.test(name)) {
+          const key = name.toLowerCase();
+          if (!knownPeople.has(key) && !newPeople.has(key)) newPeople.set(key, name);
+          out.assignee = knownPeople.get(key) || newPeople.get(key);
+        }
+      }
+
+      if (f.blocked_reason) {
+        if (!f.status) out.status = "blocked";
+        if (out.status === "blocked") out.blocked_reason = f.blocked_reason.value;
+      }
+
+      return out;
+    }
+
+    const resolved = tasks.map((task) => {
+      const out = resolveItem(task);
+      const ref = task.fields.project || task.project;
+      const project = ref ? matchProject(ref.value) : findProject(fallbackProject);
+
+      if (project) out.project = project.id;
+      else if (ref) errors.push(`Line ${ref.line}: no project called "${ref.value}". Use one of: ${allProjects().map((p) => p.id).join(", ")}.`);
+      else errors.push(`Line ${task.line}: "${task.title}" has no project.`);
+
+      out.subtasks = task.subtasks.map((sub) => {
+        if (sub.fields.project) warnings.push(`Line ${sub.fields.project.line}: subtasks always use their task's project, so "Project" is ignored.`);
+        return resolveItem(sub);
+      });
+      return out;
+    });
+
+    if (!tasks.length && !errors.length && text.trim()) {
+      errors.push('No tickets found. Each task needs to start with a "## " heading.');
+    }
+    newPeople.forEach((name) => warnings.push(`${name} isn't in People yet and will be added.`));
+
+    return { tasks: resolved, errors, warnings, newPeople: [...newPeople.values()] };
+  }
+
+  function importStatus(status) {
+    return el("span", { class: `import-status is-${status.replace("_", "-")}` }, STATUS_LABELS[status]);
+  }
+
+  function renderImportPreview() {
+    const text = ui.importText.value;
+    showError(ui.importError, null);
+
+    if (!text.trim()) {
+      ui.importPreview.replaceChildren();
+      ui.importCreate.disabled = true;
+      ui.importCreate.textContent = "Create tickets";
+      return null;
+    }
+
+    const plan = resolveImport(text, ui.importDefaultProject.value);
+    const subtaskCount = plan.tasks.reduce((sum, t) => sum + t.subtasks.length, 0);
+    const totalPoints = plan.tasks.reduce(
+      (sum, t) => sum + t.story_points + t.subtasks.reduce((s, sub) => s + sub.story_points, 0), 0
+    );
+
+    const parts = [
+      plan.errors.length
+        ? el("ul", { class: "import-messages is-error" }, plan.errors.map((m) => el("li", {}, m)))
+        : null,
+      plan.warnings.length
+        ? el("ul", { class: "import-messages" }, plan.warnings.map((m) => el("li", {}, m)))
+        : null,
+      plan.tasks.length
+        ? el("p", { class: "import-summary" },
+            `${plural(plan.tasks.length, "task")} · ${plural(subtaskCount, "subtask")} · ${formatPoints(totalPoints)} pts`)
+        : null,
+      plan.tasks.length
+        ? el("ul", { class: "import-list" }, plan.tasks.map((task) => {
+            const fromSubtasks = task.subtasks.reduce((sum, s) => sum + s.story_points, 0);
+            const pointsNote = task.subtasks.length
+              ? `${formatPoints(task.story_points)} own + ${formatPoints(fromSubtasks)} from subtasks`
+              : null;
+
+            return el("li", { class: "import-task" },
+              el("div", { class: "import-row" },
+                importStatus(task.status),
+                el("strong", {}, task.title),
+                el("span", { class: "ticket-points" }, formatPoints(task.story_points + fromSubtasks))
+              ),
+              el("p", { class: "import-meta" },
+                [task.project ? projectTitle(task.project) : "No project", task.assignee || "Unassigned", pointsNote]
+                  .filter(Boolean).join(" · ")
+              ),
+              task.subtasks.length
+                ? el("ul", { class: "import-subtasks" }, task.subtasks.map((sub) =>
+                    el("li", { class: "import-row" },
+                      importStatus(sub.status),
+                      el("span", {}, sub.title, sub.assignee ? el("small", {}, ` · ${sub.assignee}`) : null),
+                      el("span", { class: "ticket-points" }, formatPoints(sub.story_points))
+                    )))
+                : null
+            );
+          }))
+        : null,
+    ];
+    ui.importPreview.replaceChildren(...parts.filter(Boolean));
+
+    const count = plan.tasks.length + subtaskCount;
+    ui.importCreate.disabled = Boolean(plan.errors.length) || !count;
+    ui.importCreate.textContent = count ? `Create ${plural(count, "ticket")}` : "Create tickets";
+    return plan;
+  }
+
+  function aiPrompt() {
+    const projectList = allProjects()
+      .map((p) => `  - ${p.id} (${p.title}${p.isPrivate ? ", private" : ""})`)
+      .join("\n");
+    const peopleList = state.members.length
+      ? state.members.map((m) => `  - ${m.name}`).join("\n")
+      : "  - (no one yet; any names you use will be added)";
+
+    return `Write tickets for my project board as a Markdown file. Use exactly this format:
+
+# Project: <project-id>
+
+## <Task title>
+- Status: To Do
+- Points: <number>
+- Assignee: <person>
+
+<Task description in Markdown: goal, details, acceptance criteria. Can be several paragraphs.>
+
+### <Subtask title>
+- Points: <number>
+- Assignee: <person>
+
+<Optional subtask description.>
+
+Rules:
+- "## " starts a task. "### " starts a subtask of the task above it. Subtasks cannot have their own subtasks.
+- Put the "- Field: value" lines directly under each heading, before the description. All fields are optional.
+- Status is one of: To Do, In Progress, Blocked, Done. It defaults to To Do.
+- For a blocked ticket, add "- Blocked: <what it's waiting on>".
+- Points are story points (0, 0.5, 1, 2, 3, 5, 8, 13). A task's total is its own points plus all its subtasks' points, so give a task its own points only for work its subtasks don't cover (often 0).
+- "# Project: <project-id>" applies to every task below it until the next "# Project:" line.
+- Projects (use the id):
+${projectList}
+- People:
+${peopleList}
+- Reply with only the Markdown, no other commentary.
+
+Here's the work I need tickets for:
+`;
+  }
+
+  async function copyPrompt() {
+    const text = aiPrompt();
+    let copied = false;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch (e) {
+      // Fall back for browsers that block the clipboard API.
+      const area = el("textarea", { class: "sr-only" }, text);
+      document.body.append(area);
+      area.select();
+      copied = document.execCommand("copy");
+      area.remove();
+    }
+
+    ui.importCopyStatus.textContent = copied
+      ? "Copied. Paste it into Claude or ChatGPT and add what you need."
+      : "Couldn't copy. Your browser blocked the clipboard.";
+  }
+
+  async function loadImportFile(file) {
+    if (!file) return;
+    ui.importText.value = await file.text();
+    renderImportPreview();
+  }
+
+  function openImport() {
+    showError(ui.importError, null);
+    ui.importCopyStatus.textContent = "";
+    ui.importDefaultProject.replaceChildren(...projectChoices(defaultProject()));
+    renderImportPreview();
+    ui.importDialog.showModal();
+    ui.importText.focus();
+  }
+
+  async function createImport() {
+    const plan = renderImportPreview();
+    if (!plan || plan.errors.length || !plan.tasks.length) return;
+
+    const total = plan.tasks.reduce((sum, t) => sum + 1 + t.subtasks.length, 0);
+    let created = 0;
+    ui.importCreate.disabled = true;
+    ui.importCreate.textContent = "Creating…";
+
+    const fail = async () => {
+      await load();
+      const message = ui.importError.textContent;
+      showError(ui.importError, created
+        ? `Created ${created} of ${total} tickets, then hit an error: ${message} Remove the created tickets from the Markdown before importing again.`
+        : message);
+      ui.importCreate.textContent = "Create tickets";
+    };
+
+    const memberIds = new Map(state.members.map((m) => [m.name.toLowerCase(), m.id]));
+    for (const name of plan.newPeople) {
+      const person = await run(db.from("ticket_members").insert({ name }).select().single(), ui.importError);
+      if (!person) return fail();
+      memberIds.set(name.toLowerCase(), person.id);
+    }
+
+    const row = (item) => ({
+      title: item.title,
+      description: item.description,
+      status: item.status,
+      blocked_reason: item.blocked_reason,
+      story_points: item.story_points,
+      assignee_id: item.assignee ? memberIds.get(item.assignee.toLowerCase()) ?? null : null,
+    });
+
+    for (const task of plan.tasks) {
+      const parent = await run(
+        db.from("tickets").insert({ ...row(task), project: task.project, parent_id: null }).select().single(),
+        ui.importError
+      );
+      if (!parent) return fail();
+      created += 1;
+
+      if (task.subtasks.length) {
+        const subtasks = task.subtasks.map((sub) => ({ ...row(sub), project: parent.project, parent_id: parent.id }));
+        if (!(await run(db.from("tickets").insert(subtasks), ui.importError))) return fail();
+        created += subtasks.length;
+      }
+    }
+
+    ui.importText.value = "";
+    ui.importFile.value = "";
+    ui.importDialog.close();
+    await load();
+  }
+
+
   /* Auth */
 
   function setSignedIn(session) {
@@ -889,6 +1299,7 @@
       if (ui.ticketDialog.open) ui.ticketDialog.close();
       if (ui.peopleDialog.open) ui.peopleDialog.close();
       if (ui.projectsDialog.open) ui.projectsDialog.close();
+      if (ui.importDialog.open) ui.importDialog.close();
     }
   }
 
@@ -976,6 +1387,23 @@
     if (e.target === ui.projectsDialog || e.target.closest("[data-close]")) ui.projectsDialog.close();
   });
 
+  ui.openImport.addEventListener("click", openImport);
+  ui.importText.addEventListener("input", renderImportPreview);
+  ui.importDefaultProject.addEventListener("change", renderImportPreview);
+  ui.importFile.addEventListener("change", () => loadImportFile(ui.importFile.files[0]));
+  ui.importText.addEventListener("dragover", (e) => e.preventDefault());
+  ui.importText.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    e.preventDefault();
+    loadImportFile(file);
+  });
+  ui.importCopyPrompt.addEventListener("click", copyPrompt);
+  ui.importCreate.addEventListener("click", createImport);
+  ui.importDialog.addEventListener("click", (e) => {
+    if (e.target === ui.importDialog || e.target.closest("[data-close]")) ui.importDialog.close();
+  });
+
   ui.peopleForm.addEventListener("submit", addPerson);
   ui.peopleDialog.addEventListener("click", (e) => {
     if (e.target === ui.peopleDialog || e.target.closest("[data-close]")) ui.peopleDialog.close();
@@ -983,7 +1411,7 @@
 
   // Pick up changes made on another device when coming back to the tab.
   document.addEventListener("visibilitychange", () => {
-    const dialogOpen = ui.ticketDialog.open || ui.peopleDialog.open || ui.projectsDialog.open;
+    const dialogOpen = ui.ticketDialog.open || ui.peopleDialog.open || ui.projectsDialog.open || ui.importDialog.open;
     if (!document.hidden && state.signedIn && !dialogOpen) load();
   });
 

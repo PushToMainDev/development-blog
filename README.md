@@ -129,3 +129,31 @@ points. Data is stored in Supabase.
 People you assign tickets to are managed from the People button and don't
 need their own logins. To give someone else edit access, create a user for them
 and add their email to `board_users`.
+
+### Importing tickets from Markdown
+
+On the board, **Import .md** creates tickets from a Markdown file. **Copy AI prompt**
+copies instructions for Claude or ChatGPT that include your project IDs and people;
+paste it, describe the work, and save the reply as a `.md` file. The dialog previews
+every ticket before anything is created.
+
+    # Project: kin-kitchen
+
+    ## Recipe import from URLs
+    - Status: In Progress
+    - Points: 0
+    - Assignee: Greg Hudler
+
+    Description in Markdown, as many paragraphs as needed.
+
+    ### Parse schema.org recipe data
+    - Points: 3
+
+    ### Download recipe images
+    - Points: 2
+    - Blocked: Waiting on storage bucket permissions
+
+- `# Project: <id or name>` applies to the tasks below it.
+- `## ` is a task and `### ` is a subtask of the task above it.
+- Fields (all optional): Status, Points, Assignee, Blocked, and Project on a task.
+- New assignee names are added to People.
