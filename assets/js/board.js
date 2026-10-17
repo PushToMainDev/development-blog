@@ -12,6 +12,17 @@
   const STATUS_LABELS = Object.fromEntries(STATUSES.map((s) => [s.id, s.label]));
   const FILTER_STORAGE_KEY = "board-filters";
 
+  // Decorative session typed out on the sign-in screen.
+  const TERMINAL_LINES = [
+    "$ board status --sprint current",
+    "  ▸ KK-12  Recipe import       in progress   8 pts",
+    "  ▸ KK-14  Allergen filters    blocked       5 pts",
+    "  ✓ KK-9   Cookbook sharing    done         13 pts",
+    "$ git push origin main",
+    "  ✓ shipped. 21 of 26 pts done this sprint",
+    "$ board login",
+  ];
+
   const projects = config.projects || [];
   const projectsById = new Map(projects.map((p) => [p.id, p]));
 
@@ -41,6 +52,8 @@
     filterAssignee: $("#board-filter-assignee"),
     boardError: $("#board-error"),
     columns: $("#board-columns"),
+    stats: $("#board-stats"),
+    terminal: $("#dev-terminal"),
     newTicket: $("#board-new"),
     openPeople: $("#board-people"),
 
@@ -250,6 +263,53 @@
   }
 
 
+  /* Sign-in terminal */
+
+  let terminalStarted = false;
+
+  function terminalLine(text) {
+    let tone = "";
+    if (text.startsWith("$")) tone = "is-cmd";
+    else if (text.includes("blocked")) tone = "is-bad";
+    else if (text.trim().startsWith("✓")) tone = "is-ok";
+    return el("span", { class: tone }, text + "\n");
+  }
+
+  // Commands type out a character at a time; their output appears a line at a time.
+  function startTerminal() {
+    if (!ui.terminal || terminalStarted) return;
+    terminalStarted = true;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      ui.terminal.replaceChildren(...TERMINAL_LINES.map(terminalLine));
+      return;
+    }
+
+    const shown = [];
+    let line = 0;
+    let char = 0;
+
+    (function tick() {
+      if (line >= TERMINAL_LINES.length) return;
+      const text = TERMINAL_LINES[line];
+
+      if (text.startsWith("$") && char < text.length) {
+        char += 1;
+        ui.terminal.replaceChildren(...shown, el("span", { class: "is-cmd" }, text.slice(0, char)));
+        setTimeout(tick, 40 + Math.random() * 50);
+        return;
+      }
+
+      shown.push(terminalLine(text));
+      ui.terminal.replaceChildren(...shown);
+      line += 1;
+      char = 0;
+      setTimeout(tick, text.startsWith("$") ? 420 : 160);
+    })();
+  }
+
+
   /* Board */
 
   function visibleTasks() {
@@ -362,9 +422,36 @@
     return column;
   }
 
+  function stat(label, value, tone) {
+    return el("div", { class: `board-stat ${tone || ""}` },
+      el("span", { class: "board-stat-label" }, label),
+      el("strong", {}, value)
+    );
+  }
+
+  function renderStats(tasks) {
+    const everything = tasks.flatMap((t) => [t, ...subtasksOf(t)]);
+    const blocked = everything.filter((t) => t.status === "blocked").length;
+    const total = everything.reduce((sum, t) => sum + points(t.story_points), 0);
+    const done = everything.filter((t) => t.status === "done").reduce((sum, t) => sum + points(t.story_points), 0);
+    const percent = total ? Math.round((done / total) * 100) : 0;
+
+    ui.stats.replaceChildren(
+      stat("Open", tasks.filter((t) => t.status !== "done").length),
+      stat("In progress", tasks.filter((t) => t.status === "in_progress").length, "is-progress"),
+      stat("Blocked", blocked, blocked ? "is-blocked" : ""),
+      el("div", { class: "board-stat is-points" },
+        el("span", { class: "board-stat-label" }, `Points shipped · ${percent}%`),
+        el("strong", {}, formatPoints(done), el("small", {}, ` / ${formatPoints(total)}`)),
+        el("div", { class: "board-stat-bar" }, el("span", { style: `width: ${percent}%` }))
+      )
+    );
+  }
+
   function render() {
     renderFilters();
     const tasks = visibleTasks();
+    renderStats(tasks);
     ui.columns.replaceChildren(...STATUSES.map((status) => renderColumn(status, tasks)));
 
     if (ui.ticketDialog.open) renderSubtasks();
@@ -688,6 +775,8 @@
     ui.app.hidden = !signedIn;
     ui.session.hidden = !signedIn;
     ui.sessionEmail.textContent = session?.user?.email || "";
+
+    if (!signedIn) startTerminal();
 
     if (signedIn === state.signedIn) return;
     state.signedIn = signedIn;
