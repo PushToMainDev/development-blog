@@ -1,0 +1,47 @@
+{%- comment -%}
+  Two images side by side for before/after or version comparisons.
+
+  Usage in a post or product body:
+    {% include compare.html left="/assets/uploads/old.png" right="/assets/uploads/new.png" %}
+    {% include compare.html left="/assets/uploads/old.png" left_label="Before"
+       right="/assets/uploads/new.png" right_label="After" caption="Recipe card redesign" %}
+
+  The Write UI's "Image Comparison" button fills this in for you. Each image
+  opens full size in a new tab when clicked.
+{%- endcomment -%}
+
+{%- assign baseurl_size = site.baseurl | size -%}
+{%- assign compare_sides = "left,right" | split: "," -%}
+<figure class="image-compare">
+  <div class="image-compare-grid">
+    {%- for side in compare_sides -%}
+      {%- assign src = include[side] | strip -%}
+      {%- assign label_key = side | append: "_label" -%}
+      {%- assign label = include[label_key] | strip -%}
+
+      {%- comment -%} The CMS writes paths with the baseurl already on them; strip it so relative_url can't add a second copy. {%- endcomment -%}
+      {%- if site.baseurl != "" -%}
+        {%- assign src_head = src | slice: 0, baseurl_size -%}
+        {%- if src_head == site.baseurl -%}
+          {%- assign src = src | remove_first: site.baseurl -%}
+        {%- endif -%}
+      {%- endif -%}
+      {%- unless src contains "://" -%}
+        {%- assign src = src | relative_url -%}
+      {%- endunless -%}
+
+      {%- if include[side] and include[side] != "" -%}
+      <a class="image-compare-item" href="{{ src }}" target="_blank" rel="noopener">
+        {%- capture fallback_alt -%}{{ side | capitalize }} image{%- endcapture %}
+        <img src="{{ src }}" alt="{{ label | default: fallback_alt | escape }}" loading="lazy">
+        {%- if label != "" %}
+        <span class="image-compare-label">{{ label | escape }}</span>
+        {%- endif %}
+      </a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  {%- if include.caption and include.caption != "" %}
+  <figcaption>{{ include.caption | escape }}</figcaption>
+  {%- endif %}
+</figure>

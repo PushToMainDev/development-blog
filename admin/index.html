@@ -108,5 +108,91 @@
       });
     })();
   </script>
+
+  <script>
+    // "Image Comparison" button for the rich text editor. Inserts a Liquid
+    // include that _includes/compare.html renders as two images side by side.
+    (function () {
+      var OPEN = '{' + '%';
+      var CLOSE = '%' + '}';
+      var KEYS = ['left', 'left_label', 'right', 'right_label', 'caption'];
+
+      function clean(text) {
+        return String(text || '').replace(/["\r\n]/g, '').trim();
+      }
+
+      CMS.registerEditorComponent({
+        id: 'compare',
+        label: 'Image Comparison',
+        icon: 'image',
+
+        fields: [
+          { name: 'left', label: 'Left image', widget: 'image' },
+          {
+            name: 'left_label',
+            label: 'Left label',
+            widget: 'string',
+            required: false,
+            hint: 'Optional, for example "Before" or "v1".'
+          },
+          { name: 'right', label: 'Right image', widget: 'image' },
+          {
+            name: 'right_label',
+            label: 'Right label',
+            widget: 'string',
+            required: false,
+            hint: 'Optional, for example "After" or "v2".'
+          },
+          {
+            name: 'caption',
+            label: 'Caption',
+            widget: 'string',
+            required: false
+          }
+        ],
+
+        pattern: new RegExp('^\\{%\\s*include\\s+compare\\.html\\s+(.*?)\\s*%\\}$'),
+
+        fromBlock: function (match) {
+          var data = {};
+          var attr = /(\w+)="([^"]*)"/g;
+          var found;
+          while ((found = attr.exec(match[1]))) data[found[1]] = found[2];
+          return data;
+        },
+
+        toBlock: function (data) {
+          if (!data || !data.left || !data.right) return '';
+
+          var parts = KEYS
+            .filter(function (key) { return clean(data[key]); })
+            .map(function (key) { return key + '="' + clean(data[key]) + '"'; });
+
+          return OPEN + ' include compare.html ' + parts.join(' ') + ' ' + CLOSE;
+        },
+
+        toPreview: function (data) {
+          function side(src, label) {
+            if (!src) {
+              return '<div style="flex:1;padding:40px 10px;border:1px dashed #888;' +
+                'border-radius:8px;color:#888;text-align:center">Pick an image</div>';
+            }
+            return '<figure style="flex:1;margin:0">' +
+              '<img src="' + src + '" alt="" style="width:100%;border-radius:8px;display:block" />' +
+              (label ? '<figcaption style="font-size:12px;color:#888;margin-top:4px">' + clean(label) + '</figcaption>' : '') +
+              '</figure>';
+          }
+
+          return '<div style="display:flex;gap:12px;align-items:flex-start">' +
+            side(data && data.left, data && data.left_label) +
+            side(data && data.right, data && data.right_label) +
+            '</div>' +
+            (data && data.caption
+              ? '<p style="text-align:center;font-size:13px;color:#888">' + clean(data.caption) + '</p>'
+              : '');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

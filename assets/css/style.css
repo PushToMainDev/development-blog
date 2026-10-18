@@ -626,6 +626,81 @@ nav a:hover { color: var(--text); }
 }
 
 
+/* Image comparisons */
+
+.image-compare {
+  max-width: 900px;
+  margin: 32px auto;
+}
+
+.image-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+}
+
+.image-compare-item {
+  display: block;
+
+  background: var(--panel);
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  transition: border-color .2s ease;
+}
+
+.image-compare-item:hover {
+  border-color: var(--accent);
+}
+
+.post-content .image-compare-item img,
+.image-compare-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 650px;
+  margin: 0;
+  object-fit: contain;
+}
+
+.image-compare-label {
+  display: block;
+  padding: 9px 12px;
+
+  color: var(--accent);
+
+  border-top: 1px solid var(--line);
+
+  font: 700 .72rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.image-compare figcaption {
+  margin-top: 12px;
+
+  color: var(--muted);
+  font-size: .86rem;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+
+  .image-compare-grid {
+    gap: 8px;
+  }
+
+  .image-compare-label {
+    padding: 7px 9px;
+    font-size: .62rem;
+  }
+}
+
+
 /* Video embeds */
 
 .video-embed {
