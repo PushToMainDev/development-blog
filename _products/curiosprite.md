@@ -2,19 +2,18 @@
 layout: product
 title: CurioSprite
 product_id: curiosprite
-status: Concept
-order: 0
-open_source: true
-tagline: Question. Understand. Explore. Share. Test.
-repo:
-license:
+status: Development
 description: >
   CurioSprite is a planned open-source handheld game-creation platform built
   around one idea: people should be able to learn how games work by making,
   testing, playing, and sharing their own.
 
-  Draw a sprite, animate it, build a level, add simple behaviors, press Play,
-  and share the result — all without ever leaving the device.
+  Draw a sprite, animate it, build a level, add simple behaviors, press Play, and share the result — all without ever leaving the device.
+order: 0
+open_source: true
+repo: null
+license: null
+tagline: Question. Understand. Explore. Share. Test.
 notice: >
   CurioSprite does not exist as a finished product yet. This page documents the
   direction of the project, the first prototype we want to build, and the
@@ -51,8 +50,8 @@ plan:
       eventually complete small games.
   - title: CurioSprite Play
     body: >
-      A launcher for user-created games, CurioSprite-native games, and
-      supported retro systems.
+      A launcher for user-created games, CurioSprite-native games, and supported
+      retro systems.
   - title: CurioSprite Share
     body: >
       A way to package and send games between devices or through a community
@@ -128,26 +127,27 @@ roadmap_heading: What happens next.
 roadmap:
   - title: Bench Prototype
     body: >
-      Connect the Pi, touchscreen, controls, analog inputs, and audio on the desk.
+      Connect the Pi, touchscreen, controls, analog inputs, and audio on the
+      desk.
   - title: Input Layer
-    body: >
+    body: |
       Make every physical control and the touchscreen register reliably.
   - title: Sprite Editor v0.1
     body: >
       Draw, erase, fill, save, load, and test the experience of creating on a
       handheld.
   - title: Animation
-    body: >
+    body: |
       Add frames, playback, looping, and editable preset animation sets.
   - title: First Runtime
     body: >
       Put a created sprite in a basic world and make it move, jump, collide, and
       collect something.
   - title: Logic & Behaviors
-    body: >
+    body: |
       Add visual rules and beginner-friendly preset behaviors.
   - title: Level Editor
-    body: >
+    body: |
       Build and test small game spaces directly on the touchscreen.
   - title: Functional Handheld
     body: >
